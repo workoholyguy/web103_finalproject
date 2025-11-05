@@ -6,13 +6,21 @@ Reference the Creating an Entity Relationship Diagram final project guide in the
 
 [👉🏾👉🏾👉🏾 List the pages you expect to have in your app, with a ⭐ next to pages you have wireframed]
 ⭐ Dashboard
+
 ⭐ Job Feed
+
 CareerBoard
+
 Applications
+
 ⭐ Analytics
+
 Saved Jobs
+
 Job Alerts
+
 Comparisons
+
 Settings
 
 ## Wireframe 1: Dashboard
