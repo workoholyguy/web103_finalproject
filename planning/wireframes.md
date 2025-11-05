@@ -5,6 +5,7 @@ Reference the Creating an Entity Relationship Diagram final project guide in the
 ## List of Pages
 
 [👉🏾👉🏾👉🏾 List the pages you expect to have in your app, with a ⭐ next to pages you have wireframed]
+
 ⭐ Dashboard
 
 ⭐ Job Feed
