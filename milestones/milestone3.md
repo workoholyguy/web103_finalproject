@@ -8,9 +8,10 @@ This unit, be sure to complete all tasks listed below. To complete a task, place
 
 You will need to reference the GitHub Project Management guide in the course portal for more information about how to complete each of these steps.
 
-- [ ] In your repo, create a project board. 
+- [x] In your repo, create a project board. 
   - *Please be sure to share your project board with the grading team's GitHub **codepathreview**. This is separate from your repository's sharing settings.*
-- [ ] In your repo, create at least 5 issues from the features on your feature list.
+    This is a link to our project board:[https://github.com/users/workoholyguy/projects/1/settings ], not yet sure where else we're supoosed to share it.
+- [x] In your repo, create at least 5 issues from the features on your feature list.
 - [ ] In your repo, update the status of issues in your project board.
 - [ ] In your repo, create a GitHub Milestone for each final project unit, corresponding to each of the 5 milestones in your `milestones/` directory. 
   - [ ] Set the completion percentage of each milestone. The GitHub Milestone for this unit (Milestone 3 - Unit 7) should be 100% completed when you submit for full points.
