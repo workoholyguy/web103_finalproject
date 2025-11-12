@@ -9,6 +9,10 @@ npm install
 npm run start
 ```
 
+## API configuration
+
+Set the API base URL for the Express backend (defaults to http://localhost:3001) by copying `.env.example` to `.env` and tweaking `VITE_API_BASE_URL`. All job feed requests go through `/api/jobs/search` on that backend.
+
 # Building For Production
 
 To build this application for production:

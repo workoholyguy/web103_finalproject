@@ -1,5 +1,7 @@
 import express from "express";
-// import cors from "cors";
+import cors from "cors";
+import jobsRouter from "./routes/jobs.js";
+import applicationsRouter from "./routes/applications.js";
 // import tripRouter from "./routes/trips.js";
 // import activityRouter from "./routes/activities.js";
 // import destinationRouter from "./routes/destinations.js";
@@ -7,12 +9,11 @@ import express from "express";
 // import usersRouter from "./routes/users.js";
 // import tripsUsersRouter from "./routes/tripsUsers.js";
 
-// create express app
 const app = express();
+app.use(cors());
 app.use(express.json());
-// app.use(cors());
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res
     .status(200)
     .send(
@@ -20,6 +21,10 @@ app.get("/", (req, res) => {
     );
 });
 
+app.use("/jobs", jobsRouter);
+app.use("/api/jobs", jobsRouter);
+app.use("/applications", applicationsRouter);
+app.use("/api/applications", applicationsRouter);
 // app.use("/trips", tripRouter);
 // app.use("/activities", activityRouter);
 // app.use("/destinations", destinationRouter);

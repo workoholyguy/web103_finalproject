@@ -49,15 +49,13 @@ It helps visualize where the user stands in the application pipeline.]
 
 [gif goes here]
 
-### [Integrated Job Feed (API)]
+### [✅Integrated Job Feed (API)]
 
 [The app pulls real-time job listings from external APIs such as LinkedIn, Greenhouse, or Indeed. Users can explore job openings directly in the app and add interesting ones to their tracker with a single click.]
-- [ ] Select Job API (e.g., Greenhouse or Indeed) — Test connection with Postman.  
-- [ ] Build External API Fetch Endpoint (GET `/jobs/feed`) — Proxy call through backend to avoid CORS.  
-- [ ] Map External Fields — Normalize fields (title, company, location, URL).  
-- [ ] Render Job Feed in UI — Display fetched jobs with pagination.  
-- [ ] Add “Save to Tracker” Button — Insert selected job into `applications` table.  
-
+- [x] Select Job API (e.g., Greenhouse or Indeed) — Test connection with Postman.  
+- [x] Build External API Fetch Endpoint (GET `/jobs/feed`) — Proxy call through backend to avoid CORS.  
+- [x] Map External Fields — Normalize fields (title, company, location, URL).  
+- [x] Render Job Feed in UI — Display fetched jobs with pagination.  
 
 [gif goes here]
 
@@ -95,7 +93,7 @@ This ensures no opportunity slips through the cracks.]
 
 [Users can search their saved applications or filter by company, role, or status.This makes it easy to find specific opportunities or check progress on recent submissions.]
 - [ ] Search Endpoint (GET `/applications?query=`) — Filter by company or role.  
-- [ ] Frontend Search Bar — Debounced search input.  
+- [x] Frontend Search Bar — Debounced search input.  
 - [ ] Filter Dropdowns — Status or Date filters.  
 - [ ] Combine Filters — e.g., status + keyword search.  
 
