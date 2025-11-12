@@ -33,7 +33,7 @@ Backend: Express.Js, Node.Js, PostgreSQL,
 - [ ] Delete Application (DELETE) — Remove an application entry → show deletion reflected in DB/UI.  
 - [ ] Link Application to User (FK) — Ensure every job record is tied to a `user_id`.  
 - [ ] Frontend Form Submission — Build a simple “Add Job” form → show live form submission.  
-- [ ] Display Application List — Render list of user’s applications in the front end.  
+- [x] Display Application List — Render list of user’s applications in the front end.  
 - [ ] Show Confirmation Toasts — Success/failure notifications after CRUD operations. 
 
 [gif goes here]
@@ -58,6 +58,7 @@ It helps visualize where the user stands in the application pipeline.]
 - [x] Render Job Feed in UI — Display fetched jobs with pagination.  
 
 [gif goes here]
+![Job feed demo](https://imgur.com/a/XOZWpV8)
 
 ### [ADDITIONAL FEATURES GO HERE - ADD ALL FEATURES HERE IN THE FORMAT ABOVE; you will check these off and add gifs as you complete them]
 
