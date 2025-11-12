@@ -22,11 +22,19 @@ Frontend: React, Vite
 
 Backend: Express.Js, Node.Js, PostgreSQL,
 
-## Features
+## Features ✅
 
 ### [Application Tracker]
 
 [Users can log and manage all their job applications in one place — including company name, position, application date, and status.]
+- [ ] Create Job Application (POST) — Add a new application (company, role, date, status) via Postman → show DB update.  
+- [ ] Read Applications (GET) — Retrieve all applications for a user → show JSON response or table in UI.  
+- [ ] Update Application (PUT/PATCH) — Edit an application’s status or details → show updated field in UI.  
+- [ ] Delete Application (DELETE) — Remove an application entry → show deletion reflected in DB/UI.  
+- [ ] Link Application to User (FK) — Ensure every job record is tied to a `user_id`.  
+- [ ] Frontend Form Submission — Build a simple “Add Job” form → show live form submission.  
+- [ ] Display Application List — Render list of user’s applications in the front end.  
+- [ ] Show Confirmation Toasts — Success/failure notifications after CRUD operations. 
 
 [gif goes here]
 
@@ -34,12 +42,22 @@ Backend: Express.Js, Node.Js, PostgreSQL,
 
 [A clean dashboard summarizes the user’s overall progress — showing totals for “Applied,” “Interviewing,” “Offers,” and “Rejected.”
 It helps visualize where the user stands in the application pipeline.]
+- [ ] Compute Status Counts (SQL or JS aggregation) — Count applications by status (`applied`, `interviewing`, etc.).  
+- [ ] Backend Endpoint for Stats (GET `/applications/stats`) — Return JSON summary.  
+- [ ] Frontend Visualization Component — Display totals using cards or bar charts.  
+- [ ] Dynamic Update on Change — Automatically refresh dashboard after CRUD events.  
 
 [gif goes here]
 
 ### [Integrated Job Feed (API)]
 
 [The app pulls real-time job listings from external APIs such as LinkedIn, Greenhouse, or Indeed. Users can explore job openings directly in the app and add interesting ones to their tracker with a single click.]
+- [ ] Select Job API (e.g., Greenhouse or Indeed) — Test connection with Postman.  
+- [ ] Build External API Fetch Endpoint (GET `/jobs/feed`) — Proxy call through backend to avoid CORS.  
+- [ ] Map External Fields — Normalize fields (title, company, location, URL).  
+- [ ] Render Job Feed in UI — Display fetched jobs with pagination.  
+- [ ] Add “Save to Tracker” Button — Insert selected job into `applications` table.  
+
 
 [gif goes here]
 
@@ -50,6 +68,13 @@ It helps visualize where the user stands in the application pipeline.]
 [Secure user authentication allows individuals to create accounts, save their job data, and access it from any device.
 It keeps personal information safe while providing a seamless login experience.]
 
+- [ ] User Signup (POST `/auth/signup`) — Test via Postman.  
+- [ ] User Login (POST `/auth/login`) — Return JWT or Supabase session.  
+- [ ] Protected Routes — Verify only logged-in users can access `/applications`.  
+- [ ] Logout Functionality — Clear tokens/session.  
+- [ ] Session Persistence — Maintain state on refresh (localStorage or Supabase).  
+
+
 [gif goes here]
 
 ### [Notes & Follow-Ups]
@@ -57,11 +82,23 @@ It keeps personal information safe while providing a seamless login experience.]
 [Each job entry includes a personal notes section for interview prep, recruiter details, or reminders to follow up.
 This ensures no opportunity slips through the cracks.]
 
+- [ ] Add Notes Column — Extend `applications` table (`notes TEXT`).  
+- [ ] Update Notes (PUT) — Endpoint for modifying notes.  
+- [ ] Frontend Note Editor (Textarea) — Inline editing component.  
+- [ ] Auto-Save Notes — Save changes on blur or button click.  
+- [ ] Reminder Date (Optional) — Add `follow_up_date` and highlight overdue ones.  
+
+
 [gif goes here]
 
 ### [Search & Filter]
 
 [Users can search their saved applications or filter by company, role, or status.This makes it easy to find specific opportunities or check progress on recent submissions.]
+- [ ] Search Endpoint (GET `/applications?query=`) — Filter by company or role.  
+- [ ] Frontend Search Bar — Debounced search input.  
+- [ ] Filter Dropdowns — Status or Date filters.  
+- [ ] Combine Filters — e.g., status + keyword search.  
+
 
 [gif goes here]
 
