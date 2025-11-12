@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "destination": "Golden Circle",
+    "description": "Thingvellir, Geysir, and Gullfoss loop.",
+    "city": "Selfoss",
+    "country": "Iceland",
+    "img_url": "https://example.com/images/golden-circle.jpg",
+    "flag_img_url": "https://example.com/flags/is.png"
+  },
+  {
+    "id": 2,
+    "destination": "Fushimi Inari Shrine",
+    "description": "Torii gate mountain path.",
+    "city": "Kyoto",
+    "country": "Japan",
+    "img_url": "https://example.com/images/fushimi-inari.jpg",
+    "flag_img_url": "https://example.com/flags/jp.png"
+  },
+  {
+    "id": 3,
+    "destination": "Perito Moreno Glacier",
+    "description": "Advancing Patagonian glacier viewpoints.",
+    "city": "El Calafate",
+    "country": "Argentina",
+    "img_url": "https://example.com/images/perito-moreno.jpg",
+    "flag_img_url": "https://example.com/flags/ar.png"
+  },
+  {
+    "id": 4,
+    "destination": "Capri Island",
+    "description": "Sea caves and cliffside villages.",
+    "city": "Capri",
+    "country": "Italy",
+    "img_url": "https://example.com/images/capri.jpg",
+    "flag_img_url": "https://example.com/flags/it.png"
+  },
+  {
+    "id": 5,
+    "destination": "Serengeti National Park",
+    "description": "Plains full of migrating wildlife.",
+    "city": "Serengeti",
+    "country": "Tanzania",
+    "img_url": "https://example.com/images/serengeti.jpg",
+    "flag_img_url": "https://example.com/flags/tz.png"
+  },
+  {
+    "id": 6,
+    "destination": "Lake Louise",
+    "description": "Turquoise lake surrounded by peaks.",
+    "city": "Lake Louise",
+    "country": "Canada",
+    "img_url": "https://example.com/images/lake-louise.jpg",
+    "flag_img_url": "https://example.com/flags/ca.png"
+  },
+  {
+    "id": 7,
+    "destination": "Milford Sound",
+    "description": "Fiordland cruise with waterfalls.",
+    "city": "Milford Sound",
+    "country": "New Zealand",
+    "img_url": "https://example.com/images/milford-sound.jpg",
+    "flag_img_url": "https://example.com/flags/nz.png"
+  },
+  {
+    "id": 8,
+    "destination": "Ait Benhaddou",
+    "description": "UNESCO clay kasbah on ancient caravan route.",
+    "city": "Aït Benhaddou",
+    "country": "Morocco",
+    "img_url": "https://example.com/images/ait-benhaddou.jpg",
+    "flag_img_url": "https://example.com/flags/ma.png"
+  },
+  {
+    "id": 9,
+    "destination": "Santorini Caldera",
+    "description": "Whitewashed villages overlooking the sea.",
+    "city": "Fira",
+    "country": "Greece",
+    "img_url": "https://example.com/images/santorini.jpg",
+    "flag_img_url": "https://example.com/flags/gr.png"
+  },
+  {
+    "id": 10,
+    "destination": "Machu Picchu",
+    "description": "Incan citadel above the Sacred Valley.",
+    "city": "Aguas Calientes",
+    "country": "Peru",
+    "img_url": "https://example.com/images/machu-picchu.jpg",
+    "flag_img_url": "https://example.com/flags/pe.png"
+  }
+]

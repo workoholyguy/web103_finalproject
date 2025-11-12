@@ -1,0 +1,13 @@
+[
+    {"id":1,"trip_id":1,"activity":"Blue Lagoon soak","num_votes":27},
+    {"id":2,"trip_id":1,"activity":"Snorkel Silfra fissure","num_votes":18},
+    {"id":3,"trip_id":2,"activity":"Tsukiji outer-market food crawl","num_votes":19},
+    {"id":4,"trip_id":2,"activity":"Tea ceremony in Gion","num_votes":22},
+    {"id":5,"trip_id":3,"activity":"Base hike to Torres towers","num_votes":34},
+    {"id":6,"trip_id":4,"activity":"Boat ride along Amalfi coast","num_votes":25},
+    {"id":7,"trip_id":5,"activity":"Sunrise hot-air balloon over Serengeti","num_votes":31},
+    {"id":8,"trip_id":6,"activity":"Banff gondola ride","num_votes":16},
+    {"id":9,"trip_id":7,"activity":"Bungee jump in Queenstown","num_votes":28},
+    {"id":10,"trip_id":8,"activity":"Camel trek to desert camp","num_votes":24}
+  ]
+  

@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "title": "Iceland Ring Road",
+    "description": "Ten-day drive looping Iceland's waterfalls, geysers, and glaciers.",
+    "img_url": "https://example.com/images/iceland-ring-road.jpg",
+    "num_days": 10,
+    "start_date": "2025-06-10",
+    "end_date": "2025-06-19",
+    "total_cost": "3650.00"
+  },
+  {
+    "id": 2,
+    "title": "Kyoto & Tokyo Explorer",
+    "description": "Split time between Kyoto's temples and Tokyo's neon neighborhoods.",
+    "img_url": "https://example.com/images/japan-twin-cities.jpg",
+    "num_days": 8,
+    "start_date": "2025-04-05",
+    "end_date": "2025-04-12",
+    "total_cost": "2850.00"
+  },
+  {
+    "id": 3,
+    "title": "Patagonia Trekking",
+    "description": "Guided trek in Torres del Paine with glacier excursions.",
+    "img_url": "https://example.com/images/patagonia-trek.jpg",
+    "num_days": 12,
+    "start_date": "2025-11-02",
+    "end_date": "2025-11-13",
+    "total_cost": "4125.00"
+  },
+  {
+    "id": 4,
+    "title": "Amalfi Coast Escape",
+    "description": "Sorrento base with day trips to Capri and Positano.",
+    "img_url": "https://example.com/images/amalfi.jpg",
+    "num_days": 7,
+    "start_date": "2025-05-14",
+    "end_date": "2025-05-20",
+    "total_cost": "2480.00"
+  },
+  {
+    "id": 5,
+    "title": "Safari in the Serengeti",
+    "description": "Witness the Great Migration and stay in tented camps.",
+    "img_url": "https://example.com/images/serengeti.jpg",
+    "num_days": 9,
+    "start_date": "2025-07-08",
+    "end_date": "2025-07-16",
+    "total_cost": "5390.00"
+  },
+  {
+    "id": 6,
+    "title": "Canadian Rockies Rail",
+    "description": "Luxury rail journey from Vancouver to Banff.",
+    "img_url": "https://example.com/images/rockies-rail.jpg",
+    "num_days": 6,
+    "start_date": "2025-09-03",
+    "end_date": "2025-09-08",
+    "total_cost": "3295.00"
+  },
+  {
+    "id": 7,
+    "title": "New Zealand South Island Loop",
+    "description": "Queenstown adventures and Milford Sound cruise.",
+    "img_url": "https://example.com/images/nz-loop.jpg",
+    "num_days": 11,
+    "start_date": "2025-01-18",
+    "end_date": "2025-01-28",
+    "total_cost": "3875.00"
+  },
+  {
+    "id": 8,
+    "title": "Moroccan Desert & Medinas",
+    "description": "From Marrakech medina to Sahara camel camp.",
+    "img_url": "https://example.com/images/morocco.jpg",
+    "num_days": 8,
+    "start_date": "2025-03-12",
+    "end_date": "2025-03-19",
+    "total_cost": "2295.00"
+  },
+  {
+    "id": 9,
+    "title": "Greek Island Hopping",
+    "description": "Ferries between Santorini, Naxos, and Mykonos.",
+    "img_url": "https://example.com/images/greek-islands.jpg",
+    "num_days": 9,
+    "start_date": "2025-06-22",
+    "end_date": "2025-06-30",
+    "total_cost": "3150.00"
+  },
+  {
+    "id": 10,
+    "title": "Peru Andes Highlights",
+    "description": "Machu Picchu, Sacred Valley, and Cusco cuisine.",
+    "img_url": "https://example.com/images/peru-andes.jpg",
+    "num_days": 10,
+    "start_date": "2025-08-04",
+    "end_date": "2025-08-13",
+    "total_cost": "2980.00"
+  }
+]

@@ -1,0 +1,13 @@
+[
+    {"trip_id":1,"destination_id":1},
+    {"trip_id":1,"destination_id":6},
+    {"trip_id":2,"destination_id":2},
+    {"trip_id":3,"destination_id":3},
+    {"trip_id":4,"destination_id":4},
+    {"trip_id":5,"destination_id":5},
+    {"trip_id":6,"destination_id":6},
+    {"trip_id":7,"destination_id":7},
+    {"trip_id":8,"destination_id":8},
+    {"trip_id":9,"destination_id":9}
+  ]
+  
