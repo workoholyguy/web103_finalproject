@@ -1,20 +1,22 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') ?? '/api'
+import {
+  createSandboxApplication,
+  deleteSandboxApplication,
+  fetchSandboxApplications,
+  isSandboxEnabled,
+  updateSandboxApplication,
+  updateSandboxApplicationStatus,
+} from './sandboxApplications'
+import type {
+  ApplicationsQuery,
+  ApplicationsResponse,
+  CreateApplicationPayload,
+  JobApplication,
+  JobFeedResult,
+  JobListing,
+  UpdateApplicationPayload,
+} from './types'
 
-export type JobListing = {
-  externalId: string
-  title: string
-  company: string
-  location?: string
-  remote?: boolean
-  url: string
-  source: string
-  description?: string
-  salaryMin?: number
-  salaryMax?: number
-  currency?: string
-  postedAt?: string
-  tags?: string[]
-}
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') ?? '/api'
 
 type CachedJobFeedResponse = {
   items: JobListing[]
@@ -28,16 +30,6 @@ type CachedJobFeedResponse = {
 
 type LiveJobFeedResponse = {
   items: JobListing[]
-}
-
-export type JobFeedResult = {
-  items: JobListing[]
-  meta?: {
-    page: number
-    limit: number
-    count: number
-    sort?: string
-  }
 }
 
 type JobFeedQuery = {
@@ -107,45 +99,31 @@ export async function fetchJobFeed(query: JobFeedQuery = {}): Promise<JobFeedRes
   }
 }
 
-export type JobApplication = {
-  id: string
-  title: string
-  company: string
-  status: string
-  stage?: string
-  appliedAt?: string
-  responseAt?: string
-  location?: string
-  remote?: boolean
-  source?: string
-  jobPostUrl?: string
-  notes?: string
-  salaryMin?: number
-  salaryMax?: number
-  currency?: string
-}
+const CRON_SECRET = import.meta.env.VITE_CRON_SECRET?.trim()
 
-type ApplicationsResponse = {
-  items: JobApplication[]
-  meta?: {
-    page: number
-    limit: number
-    total: number
+export async function refreshJobCache() {
+  const params = new URLSearchParams()
+  if (CRON_SECRET) params.set('key', CRON_SECRET)
+
+  const response = await fetch(
+    `${API_BASE_URL}/jobs/refresh${params.toString() ? `?${params.toString()}` : ''}`,
+  )
+
+  if (!response.ok) {
+    throw new Error('Unable to refresh jobs right now.')
   }
-}
 
-export type ApplicationsQuery = {
-  query?: string
-  status?: string | string[]
-  appliedAfter?: string
-  page?: number
-  limit?: number
-  userId?: string
+  const data = await response.json()
+  return data
 }
 
 export async function fetchApplications(
   query: ApplicationsQuery = {}
 ): Promise<ApplicationsResponse> {
+  if (isSandboxEnabled()) {
+    return fetchSandboxApplications(query)
+  }
+
   const params = new URLSearchParams()
 
   if (query.query?.trim()) params.set('query', query.query.trim())
@@ -159,6 +137,7 @@ export async function fetchApplications(
   if (query.page) params.set('page', String(query.page))
   if (query.limit) params.set('limit', String(query.limit))
   if (query.userId) params.set('userId', query.userId)
+  if (query.sort) params.set('sort', query.sort)
 
   if (!params.has('page')) params.set('page', String(query.page ?? 1))
   if (!params.has('limit')) params.set('limit', String(query.limit ?? 20))
@@ -184,3 +163,108 @@ export async function fetchApplications(
     meta: data.meta ?? fallbackMeta,
   }
 }
+
+export async function createApplication(
+  payload: CreateApplicationPayload,
+): Promise<JobApplication> {
+  if (isSandboxEnabled()) {
+    return createSandboxApplication(payload)
+  }
+
+  const response = await fetch(`${API_BASE_URL}/applications`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+
+  if (!response.ok) {
+    const message =
+      (await response.json().catch(() => null))?.error ??
+      'Unable to create application right now.'
+    throw new Error(message)
+  }
+
+  return (await response.json()) as JobApplication
+}
+
+export async function updateApplicationStatus(
+  id: string,
+  status: JobApplication['status'],
+): Promise<JobApplication> {
+  if (isSandboxEnabled()) {
+    return updateSandboxApplicationStatus(id, status)
+  }
+
+  const response = await fetch(`${API_BASE_URL}/applications/${id}/status`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ status }),
+  })
+
+  if (!response.ok) {
+    const message =
+      (await response.json().catch(() => null))?.error ??
+      'Unable to update application right now.'
+    throw new Error(message)
+  }
+
+  return (await response.json()) as JobApplication
+}
+
+export async function updateApplication(
+  id: string,
+  payload: UpdateApplicationPayload,
+): Promise<JobApplication> {
+  if (isSandboxEnabled()) {
+    return updateSandboxApplication(id, payload)
+  }
+
+  const response = await fetch(`${API_BASE_URL}/applications/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+
+  if (!response.ok) {
+    const message =
+      (await response.json().catch(() => null))?.error ??
+      'Unable to update application right now.'
+    throw new Error(message)
+  }
+
+  return (await response.json()) as JobApplication
+}
+
+export async function deleteApplication(id: string): Promise<void> {
+  if (isSandboxEnabled()) {
+    return deleteSandboxApplication(id)
+  }
+
+  const response = await fetch(`${API_BASE_URL}/applications/${id}`, {
+    method: 'DELETE',
+  })
+
+  if (!response.ok) {
+    const message =
+      (await response.json().catch(() => null))?.error ??
+      'Unable to delete application right now.'
+    throw new Error(message)
+  }
+}
+
+export { getSandboxRandomAppliedDate, getSandboxRandomStatus, isSandboxEnabled } from './sandboxApplications'
+export type {
+  ApplicationsQuery,
+  ApplicationsResponse,
+  CreateApplicationPayload,
+  JobApplication,
+  JobFeedResult,
+  JobListing,
+  UpdateApplicationPayload,
+} from './types'

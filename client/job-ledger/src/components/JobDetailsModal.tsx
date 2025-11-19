@@ -1,6 +1,9 @@
 import type { JobListing } from '../lib/api'
+import { sanitizeDescription } from '../lib/text'
 
 export function JobDetailsModal({ job, onClose }: { job: JobListing; onClose: () => void }) {
+  const description = sanitizeDescription(job.description) || 'No description provided.'
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" role="dialog" aria-modal="true">
       <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-3xl bg-white p-8 shadow-2xl">
@@ -43,9 +46,7 @@ export function JobDetailsModal({ job, onClose }: { job: JobListing; onClose: ()
 
         <div className="mt-6 space-y-3 text-gray-700">
           <p className="text-xs uppercase tracking-wide text-gray-400">Description</p>
-          <p className="whitespace-pre-line leading-relaxed">
-            {job.description || 'No description provided.'}
-          </p>
+          <p className="whitespace-pre-line leading-relaxed">{description}</p>
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3">
