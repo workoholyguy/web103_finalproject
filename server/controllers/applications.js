@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { pool } from "../config/database.js";
-import mockApplications from "../config/data/applications.json" assert { type: "json" };
+import mockApplications from "../config/data/applications.json" with { type: "json" };
 
 const STATUS_VALUES = new Set([
   "planned",

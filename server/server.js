@@ -9,6 +9,7 @@ import authRouter from "./routes/auth.js";
 // import tripsDestinationsRouter from "./routes/tripsDestinations.js";
 // import usersRouter from "./routes/users.js";
 // import tripsUsersRouter from "./routes/tripsUsers.js";
+import "dotenv/config";
 
 const app = express();
 app.use(cors());
