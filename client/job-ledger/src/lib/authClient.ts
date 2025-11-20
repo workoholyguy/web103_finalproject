@@ -124,3 +124,70 @@ export const fetchCurrentUser = async (accessToken: string): Promise<AuthUser> =
 
   return data.user as AuthUser
 }
+
+export type UpdateProfilePayload = {
+  displayName?: string | null
+  avatarUrl?: string | null
+  timezone?: string | null
+}
+
+export const updateProfile = async (
+  accessToken: string,
+  payload: UpdateProfilePayload,
+): Promise<AuthUser> => {
+  const response = await fetch(`${API_BASE_URL}/auth/me`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(payload),
+  })
+
+  const data = await readResponseBody(response)
+  if (!response.ok || !data?.user) {
+    throw new Error(data?.error ?? 'Unable to update profile right now.')
+  }
+
+  return data.user as AuthUser
+}
+
+export const updateEmail = async (
+  accessToken: string,
+  payload: { email: string; password: string },
+): Promise<AuthUser> => {
+  const response = await fetch(`${API_BASE_URL}/auth/email`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(payload),
+  })
+
+  const data = await readResponseBody(response)
+  if (!response.ok || !data?.user) {
+    throw new Error(data?.error ?? 'Unable to update email right now.')
+  }
+
+  return data.user as AuthUser
+}
+
+export const updatePassword = async (
+  accessToken: string,
+  payload: { currentPassword: string; newPassword: string },
+) => {
+  const response = await fetch(`${API_BASE_URL}/auth/password`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(payload),
+  })
+
+  const data = await readResponseBody(response)
+  if (!response.ok) {
+    throw new Error(data?.error ?? 'Unable to update password right now.')
+  }
+}

@@ -65,7 +65,7 @@ const ApplicationsPage = () => {
             <li>• Create trackers from scratch</li>
             <li>• Import listings from the Job Feed</li>
             <li>• Debounced search + filters (status, timeframe)</li>
-            <li>• Hooks ready for Supabase authentication</li>
+            <li>• Account-based sync keeps every device updated</li>
           </ul>
         </div>
       </div>
@@ -93,8 +93,8 @@ const ApplicationsPage = () => {
           <h3 className="mt-2 text-3xl font-black text-slate-900">Search & filter your saved roles</h3>
           <p className="mt-2 text-sm text-slate-600 max-w-2xl">
             Keyword search, status chips, timeframe filters, and remote context ensure you can zero
-            in on the opportunities that need care. When account logins arrive we’ll simply filter
-            the very same data per user.
+            in on the opportunities that need care. Signed-in users automatically see their own
+            pipelines without extra setup.
           </p>
         </div>
         <Link

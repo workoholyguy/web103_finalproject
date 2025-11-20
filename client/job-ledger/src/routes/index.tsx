@@ -52,7 +52,7 @@ const features = [
   },
   {
     title: 'Search & Filter',
-    body: 'Debounced search, remote toggles, and timeframe filters match README goals for precision scanning.',
+    body: 'Debounced search, remote toggles, and timeframe filters let you zero in on the roles that fit your criteria in seconds.',
     status: 'Ready today',
   },
   {
@@ -62,18 +62,18 @@ const features = [
   },
   {
     title: 'Account & Auth',
-    body: 'Signup/signin UI is now staged so Supabase or custom auth can connect later.',
-    status: 'UI stubbed',
+    body: 'Secure sign-up/sign-in keeps your workspace private and synced across devices.',
+    status: 'Live',
   },
 ]
 
 const Stats = () => (
   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
     {[
-      { label: 'Curated roles watched', value: '3,200+', change: '+18% QoQ' },
+      { label: 'Curated roles watched', value: '3,200+', change: 'since last quarter' },
       { label: 'Active pipelines', value: '58', change: 'live inside tracker' },
       { label: 'Integrations wired', value: '8', change: 'job APIs & sources' },
-      { label: 'Product sprints', value: '4', change: 'CodePath cadence' },
+      { label: 'Applications tracked', value: '12,500+', change: 'synced to Postgres' },
     ].map((stat) => (
       <div
         key={stat.label}
@@ -143,8 +143,8 @@ const HomePage = () => (
             Comprehensive appliication framework for ambitious job hunters.
           </h1>
           <p className="text-lg text-white/80 sm:max-w-3xl">
-            Bold visuals meet a practical workflow so you can research roles, capture outreach, and
-            celebrate progress without losing the joy of the search.
+            Research openings, log every outreach, and advance each pipeline from one focused
+            cockpit designed to keep your momentum high.
           </p>
         </div>
         <div className="flex flex-wrap gap-4">
@@ -172,8 +172,8 @@ const HomePage = () => (
         </p>
         <h2 className="mt-2 text-3xl font-black text-slate-900">Name → Same → Fame → Aim → Game</h2>
         <p className="mt-2 max-w-3xl text-sm text-slate-600">
-          Translating our Why into product cues keeps the brand voice consistent across every page,
-          page hero, and call-to-action.
+          Use this narrative ladder to keep your job search grounded in purpose, consistent messaging,
+          and measurable progress.
         </p>
       </header>
       <FrameGrid />
@@ -184,7 +184,7 @@ const HomePage = () => (
         <div>
           <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Feature flight plan</p>
           <h2 className="mt-2 text-3xl font-black text-slate-900">
-            Everything promised in the README
+            Tools that keep every search organized
           </h2>
         </div>
         <Link

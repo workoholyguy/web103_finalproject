@@ -62,7 +62,7 @@ It helps visualize where the user stands in the application pipeline.]
 
 ### [ADDITIONAL FEATURES GO HERE - ADD ALL FEATURES HERE IN THE FORMAT ABOVE; you will check these off and add gifs as you complete them]
 
-### [Account & Authentication]
+### [✅ Account & Authentication]
 
 [Secure user authentication allows individuals to create accounts, save their job data, and access it from any device.
 It keeps personal information safe while providing a seamless login experience.]
@@ -76,7 +76,7 @@ It keeps personal information safe while providing a seamless login experience.]
 
 [gif goes here]
 
-### [Notes & Follow-Ups]
+### [✅ Notes & Follow-Ups]
 
 [Each job entry includes a personal notes section for interview prep, recruiter details, or reminders to follow up.
 This ensures no opportunity slips through the cracks.]
