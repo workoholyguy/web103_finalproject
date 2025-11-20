@@ -5,31 +5,31 @@ const frame = [
   {
     label: 'Name',
     title: 'Job Ledger',
-    body: 'We built Job Ledger so early-career talent can keep every lead, follow-up, and win in one disciplined workspace instead of scattered docs.',
+    body: 'Job Ledger equips ambitious candidates with a disciplined operating layer so every lead, follow-up, and decision lives in one professional workspace instead of scattered notes.',
     accent: 'from-blue-500 to-indigo-500',
   },
   {
     label: 'Same',
-    title: 'Same vibe as a personal trainer',
-    body: 'Think of it like a personal career trainer — a friendly push to run searches, log outreach, and stay accountable every single week.',
+    title: 'Same tool tracks every application',
+    body: 'Job Ledger consolidates job discovery, outreach, notes, and stage management into one control panel so every application stays visible and actionable.',
     accent: 'from-emerald-500 to-teal-500',
   },
   {
     label: 'Fame',
     title: 'Famous for obsessive visibility',
-    body: 'Live job feed, timeline tags, and status summaries keep every opportunity visible so you always know what deserves energy next.',
+    body: 'Live telemetry, annotated timelines, and stage summaries keep every opportunity visible so you always know where momentum needs to go next.',
     accent: 'from-purple-500 to-pink-500',
   },
   {
     label: 'Aim',
     title: 'Aim — short-term sprints',
-    body: 'Right now we are polishing the tracker experience, tightening filters, and helping you capture roles you find online in seconds.',
+    body: 'Today’s focus is tightening the tracker, sharpening filters, and letting you capture external roles in seconds for high-signal weekly sprints.',
     accent: 'from-amber-500 to-orange-500',
   },
   {
     label: 'Game',
     title: 'Game — long-term legend',
-    body: 'Long term we’re building the job-search operating system: analytics, accountability rituals, and insights that nudge you toward offers faster.',
+    body: 'Over the long horizon we are building the job-search operating system—analytics, accountability, and predictive insights that accelerate offers.',
     accent: 'from-cyan-500 to-blue-500',
   },
 ]
@@ -140,7 +140,7 @@ const HomePage = () => (
         </div>
         <div className="space-y-4">
           <h1 className="text-5xl font-black leading-tight sm:text-6xl">
-            A cinematic operating system for ambitious job hunters.
+            Comprehensive appliication framework for ambitious job hunters.
           </h1>
           <p className="text-lg text-white/80 sm:max-w-3xl">
             Bold visuals meet a practical workflow so you can research roles, capture outreach, and

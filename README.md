@@ -31,7 +31,7 @@ Backend: Express.Js, Node.Js, PostgreSQL,
 - [x] Read Applications (GET) — Retrieve all applications for a user → show JSON response or table in UI.  
 - [x] Update Application (PUT/PATCH) — Edit an application’s status or details → show updated field in UI.  
 - [x] Delete Application (DELETE) — Remove an application entry → show deletion reflected in DB/UI.  
-- [ ] Link Application to User (FK) — Ensure every job record is tied to a `user_id`.  
+- [x] Link Application to User (FK) — Auth middleware enforces `user_id` ownership on every request.
 - [x] Frontend Form Submission — Build a simple “Add Job” form → show live form submission.  
 - [x] Display Application List — Render list of user’s applications in the front end.  
 - [x] Show Confirmation Toasts — Success/failure notifications after CRUD operations. 
@@ -67,11 +67,11 @@ It helps visualize where the user stands in the application pipeline.]
 [Secure user authentication allows individuals to create accounts, save their job data, and access it from any device.
 It keeps personal information safe while providing a seamless login experience.]
 
-- [ ] User Signup (POST `/auth/signup`) — Test via Postman.  
-- [ ] User Login (POST `/auth/login`) — Return JWT or Supabase session.  
-- [ ] Protected Routes — Verify only logged-in users can access `/applications`.  
-- [ ] Logout Functionality — Clear tokens/session.  
-- [ ] Session Persistence — Maintain state on refresh (localStorage or Supabase).  
+- [x] User Signup (POST `/api/auth/register`) — Hash password, create `users` + `user_auth_providers` rows.  
+- [x] User Login (POST `/api/auth/login`) — Issue JWT access token + Postgres-backed refresh token.  
+- [x] Protected Routes — `/api/applications` now sits behind bearer auth and scopes queries per user.  
+- [x] Logout Functionality — Refresh tokens stored in `sessions` table can be revoked on demand.  
+- [x] Session Persistence — Frontend AuthProvider stores tokens in `localStorage` and refreshes silently.  
 
 
 [gif goes here]

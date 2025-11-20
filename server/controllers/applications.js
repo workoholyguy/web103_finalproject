@@ -160,7 +160,11 @@ const resolveSortOrder = (rawSort) => {
   return SORT_MAPPINGS[normalized] || SORT_MAPPINGS.applied_desc;
 };
 
-const resolveUserId = async (explicit) => {
+const resolveUserId = async (explicit, authenticatedId = null) => {
+  if (authenticatedId) {
+    cachedDefaultUserId = authenticatedId;
+    return authenticatedId;
+  }
   if (explicit) return explicit;
   if (cachedDefaultUserId) return cachedDefaultUserId;
 
@@ -279,10 +283,11 @@ const fetchApplicationById = async (id) => {
 const ApplicationsController = {
   async list(req, res) {
     try {
-      const userId =
+      const requestedUserId =
         typeof req.query.userId === "string" && req.query.userId.trim()
           ? req.query.userId.trim()
-          : await resolveUserId();
+          : null;
+      const userId = await resolveUserId(requestedUserId, req.user?.id || null);
 
       if (!userId) {
         return res.status(400).json({ error: "userId is required" });
@@ -365,10 +370,10 @@ const ApplicationsController = {
     let payload;
     try {
       payload = normalizeCreatePayload(req.body);
-      const userId =
-        payload.userId && payload.userId.trim()
-          ? payload.userId.trim()
-          : await resolveUserId();
+      const userId = await resolveUserId(
+        payload.userId,
+        req.user?.id || null
+      );
 
       if (!userId) {
         throw new ValidationError("userId is required");
@@ -444,10 +449,10 @@ const ApplicationsController = {
     let payload;
     try {
       payload = normalizeCreatePayload(req.body);
-      const userId =
-        payload.userId && payload.userId.trim()
-          ? payload.userId.trim()
-          : await resolveUserId();
+      const userId = await resolveUserId(
+        payload.userId,
+        req.user?.id || null
+      );
 
       if (!userId) {
         throw new ValidationError("userId is required");
@@ -527,15 +532,19 @@ const ApplicationsController = {
       }
       targetId = targetId.trim();
       const status = parseStatusValue(req.body?.status);
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new ValidationError("userId is required");
+      }
 
       const updateQuery = `
         UPDATE job_applications
         SET status = $1, updated_at = NOW()
-        WHERE id = $2
+        WHERE id = $2 AND user_id = $3
         RETURNING id
       `;
 
-      const result = await pool.query(updateQuery, [status, targetId]);
+      const result = await pool.query(updateQuery, [status, targetId, userId]);
       if (!result.rows.length) {
         return res.status(404).json({ error: "Application not found" });
       }
@@ -575,6 +584,10 @@ const ApplicationsController = {
       targetId = targetId.trim();
 
       payload = normalizeCreatePayload(req.body);
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new ValidationError("userId is required");
+      }
 
       const updateQuery = `
         UPDATE job_applications
@@ -585,7 +598,7 @@ const ApplicationsController = {
             notes = $5,
             listing_snapshot = $6,
             updated_at = NOW()
-        WHERE id = $7
+        WHERE id = $7 AND user_id = $8
         RETURNING id
       `;
 
@@ -597,6 +610,7 @@ const ApplicationsController = {
         payload.notes,
         payload.snapshot,
         targetId,
+        userId,
       ]);
 
       if (!result.rows.length) {
@@ -645,10 +659,14 @@ const ApplicationsController = {
         throw new ValidationError("Valid application id is required");
       }
       targetId = targetId.trim();
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new ValidationError("userId is required");
+      }
 
       const result = await pool.query(
-        "DELETE FROM job_applications WHERE id = $1",
-        [targetId]
+        "DELETE FROM job_applications WHERE id = $1 AND user_id = $2",
+        [targetId, userId]
       );
 
       if (!result.rowCount) {

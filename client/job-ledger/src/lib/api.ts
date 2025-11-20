@@ -6,6 +6,7 @@ import {
   updateSandboxApplication,
   updateSandboxApplicationStatus,
 } from './sandboxApplications'
+import { getAccessToken } from './authClient'
 import type {
   ApplicationsQuery,
   ApplicationsResponse,
@@ -17,6 +18,16 @@ import type {
 } from './types'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') ?? '/api'
+
+const buildAuthHeaders = (): Record<string, string> => {
+  const token = getAccessToken()
+  if (token) {
+    return {
+      Authorization: `Bearer ${token}`,
+    }
+  }
+  return {}
+}
 
 type CachedJobFeedResponse = {
   items: JobListing[]
@@ -143,8 +154,12 @@ export async function fetchApplications(
   if (!params.has('limit')) params.set('limit', String(query.limit ?? 20))
 
   const search = params.toString()
+  const headers = buildAuthHeaders()
   const response = await fetch(
-    `${API_BASE_URL}/applications${search ? `?${search}` : ''}`
+    `${API_BASE_URL}/applications${search ? `?${search}` : ''}`,
+    {
+      headers,
+    }
   )
 
   if (!response.ok) {
@@ -175,6 +190,7 @@ export async function createApplication(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...buildAuthHeaders(),
     },
     body: JSON.stringify(payload),
   })
@@ -201,6 +217,7 @@ export async function updateApplicationStatus(
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
+      ...buildAuthHeaders(),
     },
     body: JSON.stringify({ status }),
   })
@@ -227,6 +244,7 @@ export async function updateApplication(
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
+      ...buildAuthHeaders(),
     },
     body: JSON.stringify(payload),
   })
@@ -248,6 +266,9 @@ export async function deleteApplication(id: string): Promise<void> {
 
   const response = await fetch(`${API_BASE_URL}/applications/${id}`, {
     method: 'DELETE',
+    headers: {
+      ...buildAuthHeaders(),
+    },
   })
 
   if (!response.ok) {

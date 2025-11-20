@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import jobsRouter from "./routes/jobs.js";
 import applicationsRouter from "./routes/applications.js";
+import authRouter from "./routes/auth.js";
 // import tripRouter from "./routes/trips.js";
 // import activityRouter from "./routes/activities.js";
 // import destinationRouter from "./routes/destinations.js";
@@ -23,6 +24,8 @@ app.get("/", (_req, res) => {
 
 app.use("/jobs", jobsRouter);
 app.use("/api/jobs", jobsRouter);
+app.use("/auth", authRouter);
+app.use("/api/auth", authRouter);
 app.use("/applications", applicationsRouter);
 app.use("/api/applications", applicationsRouter);
 // app.use("/trips", tripRouter);
