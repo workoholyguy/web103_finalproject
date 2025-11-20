@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "npm run reset && nodemon --require dotenv/config server.js",
-    "reset": "cd config && node --require dotenv/config reset.js",
-    "refresh": "node --require dotenv/config scripts/refreshJobs.js"
-  },
+  "start": "node --require dotenv/config server.js",
+  "dev": "nodemon --require dotenv/config server.js",
+  "reset": "cd config && node --require dotenv/config reset.js",
+  "refresh": "node --require dotenv/config scripts/refreshJobs.js"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
