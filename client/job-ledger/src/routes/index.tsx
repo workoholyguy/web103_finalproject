@@ -1,6 +1,8 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { ArrowRight, Sparkles, Target, Trophy } from 'lucide-react'
 
+import Hyperspeed, { hyperspeedPresets } from '@/components/Hyperspeed'
+
 const frame = [
   {
     label: 'Name',
@@ -130,21 +132,24 @@ const FrameGrid = () => (
 
 const HomePage = () => (
   <div className="space-y-20">
-    <section className="relative overflow-hidden rounded-[32px] border border-white/40 bg-gradient-to-br from-slate-900 via-indigo-900 to-sky-900 p-10 text-white shadow-2xl">
-      <div className="absolute inset-y-0 right-0 w-1/2 opacity-30 blur-3xl">
-        <div className="h-full w-full bg-gradient-to-br from-sky-400 to-purple-600" />
+    <section className="relative overflow-hidden rounded-[32px] border border-white/40 bg-slate-900 p-10 text-white shadow-2xl">
+      <div className="absolute inset-0 pointer-events-none opacity-60">
+        <Hyperspeed effectOptions={hyperspeedPresets.two} />
+      </div>
+      <div className="absolute inset-y-0 right-0 w-1/2 opacity-40 blur-3xl">
+        <div className="h-full w-full bg-gradient-to-br from-sky-400/80 to-purple-600/70" />
       </div>
       <div className="relative z-10 space-y-8">
         <div className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.45em] text-slate-100">
-          <Sparkles size={14} /> Job Ledger v2
+          <Sparkles size={14} /> Built by Avid Tech USA
         </div>
         <div className="space-y-4">
           <h1 className="text-5xl font-black leading-tight sm:text-6xl">
-            Comprehensive appliication framework for ambitious job hunters.
+            Comprehensive application framework for ambitious job hunters.
           </h1>
           <p className="text-lg text-white/80 sm:max-w-3xl">
-            Research openings, log every outreach, and advance each pipeline from one focused
-            cockpit designed to keep your momentum high.
+            Crafted by Omar Madjitov, Job Ledger keeps research, follow-ups, and offer math synced so
+            recruiters experience a premium, buttoned-up candidate journey.
           </p>
         </div>
         <div className="flex flex-wrap gap-4">

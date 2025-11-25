@@ -1,0 +1,13 @@
+.hyperspeed-canvas {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  inset: 0;
+}
+
+.hyperspeed-canvas canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}

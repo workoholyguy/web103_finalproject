@@ -3,9 +3,15 @@ import {
   BellRing,
   CalendarDays,
   ClipboardList,
+  Cloud,
+  Cpu,
+  Database,
   Flame,
   HeartHandshake,
+  Layers,
   Rocket,
+  Server,
+  Shield,
   ShieldCheck,
   Sparkles,
   Target,
@@ -42,7 +48,7 @@ const timeline = [
     era: 'Spring 2024',
     title: 'Prototype pressure cooker',
     description:
-      'During CodePath WEB103 we sketched cinematic boards that mirrored the Name → Same → Fame → Aim → Game storytelling system.',
+      'Early prototypes leaned into bold gradients, cinematic copy, and the Name → Same → Fame → Aim → Game storytelling system.',
   },
   {
     era: 'Summer 2024',
@@ -97,6 +103,39 @@ const commitments = [
   },
 ]
 
+const techStack = [
+  {
+    title: 'Client experience',
+    description: 'React 19 + Vite + TypeScript, TanStack Router, Tailwind, and Lucide icons.',
+    icon: Cpu,
+  },
+  {
+    title: 'API surface',
+    description: 'Express.js services orchestrate job feeds, application CRUD, and auth flows.',
+    icon: Server,
+  },
+  {
+    title: 'Data layer',
+    description: 'PostgreSQL stores applications, statuses, and notes with relational modeling.',
+    icon: Database,
+  },
+  {
+    title: 'Hosting pipeline',
+    description: 'Render powers the Node API while Netlify deploys the Vite SPA with env-based routing.',
+    icon: Cloud,
+  },
+  {
+    title: 'Security + auth',
+    description: 'JWT access tokens, bcrypt hashing, and rotation-friendly Postgres sessions.',
+    icon: Shield,
+  },
+  {
+    title: 'DX + visuals',
+    description: 'Vitest, ESLint, Prettier, and a three.js/postprocessing Hyperspeed scene for flair.',
+    icon: Layers,
+  },
+]
+
 const AboutPage = () => (
   <div className="space-y-12 pb-16">
     <section className="relative overflow-hidden rounded-[40px] border border-white/10 bg-slate-950 text-white shadow-2xl">
@@ -112,8 +151,9 @@ const AboutPage = () => (
             We turned the job search into a cinematic operating system.
           </h1>
           <p className="text-base text-white/80">
-            Job Ledger started as three classmates trying to juggle dozens of applications. Now it is the
-            ritual we run every week to keep conversations warm, celebrate wins, and pick the right offers.
+            Job Ledger started when Omar Madjitov needed a calmer system to juggle dozens of applications. It
+            evolved into the weekly ritual that keeps conversations warm, wins documented, and offers judged
+            with signal instead of stress.
           </p>
           <div className="flex flex-wrap gap-4">
             <Link
@@ -204,6 +244,34 @@ const AboutPage = () => (
       </div>
     </section>
 
+    <section className="rounded-[32px] border border-slate-100 bg-white/90 p-8 shadow-xl shadow-slate-200/60">
+      <header className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <p className="text-xs uppercase tracking-[0.4em] text-slate-500">Tech stack</p>
+          <h3 className="text-3xl font-black text-slate-900">How the experience is engineered.</h3>
+        </div>
+        <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+          <Sparkles size={14} /> React • Node • PostgreSQL
+        </div>
+      </header>
+      <div className="mt-8 grid gap-6 md:grid-cols-2">
+        {techStack.map((tech) => (
+          <article
+            key={tech.title}
+            className="flex gap-4 rounded-3xl border border-slate-200 bg-white/80 p-4 shadow-sm"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 text-white">
+              <tech.icon size={18} />
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold text-slate-900">{tech.title}</h4>
+              <p className="text-sm text-slate-600">{tech.description}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
     <section className="rounded-[32px] border border-slate-100 bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-8 shadow-xl shadow-slate-200/60">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
@@ -266,8 +334,8 @@ const AboutPage = () => (
         <div className="max-w-2xl space-y-2">
           <h3 className="text-3xl font-black">Ready to make your job search feel like a launch?</h3>
           <p className="text-sm text-white/80">
-            Spin up Job Ledger, log a win, send a thank-you, and keep the receipts organized. We built it for us,
-            now it&apos;s yours.
+            Spin up Job Ledger, log a win, send a thank-you, and keep the receipts organized. I built it for my
+            own interviews—now it&apos;s yours.
           </p>
         </div>
         <div className="flex flex-wrap gap-4">
