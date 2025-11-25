@@ -2,6 +2,8 @@ import { Link } from '@tanstack/react-router'
 import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
 
+const LOGO_ASSET = '/logo5121.png'
+
 const NAV_LINKS = [
   { label: 'Home', to: '/' },
   { label: 'Job Feed', to: '/job-feed' },
@@ -18,21 +20,25 @@ const MobileNav = ({
   onClose: () => void
 }) => (
   <div
-    className={`fixed inset-0 z-40 bg-slate-950/70 backdrop-blur-md transition-opacity ${
-      isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
-    }`}
+    className={`fixed inset-0 z-40 bg-slate-950/70 backdrop-blur-md transition-opacity ${isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+      }`}
     onClick={onClose}
   >
     <nav
-      className={`absolute top-0 left-0 h-full w-80 transform bg-slate-950 px-6 py-10 shadow-2xl transition-transform ${
-        isOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}
+      className={`absolute top-0 left-0 h-full w-80 transform bg-slate-950 px-6 py-10 shadow-2xl transition-transform ${isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       onClick={(event) => event.stopPropagation()}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 text-white">
-          <div className="rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 p-3 font-extrabold">
-            JL
+          <div className="h-12 w-12 overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-1 shadow-inner shadow-white/20">
+            <img
+              src={LOGO_ASSET}
+              alt="Job Ledger logo"
+              className="h-full w-full rounded-xl object-contain"
+              width={48}
+              height={48}
+            />
           </div>
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Job Ledger</p>
@@ -79,8 +85,14 @@ export default function Header() {
       <header className="fixed inset-x-0 top-0 z-30 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <Link to="/" className="flex items-center gap-3 text-white">
-            <div className="rounded-2xl bg-white/10 p-2 shadow-inner shadow-cyan-500/20">
-              <span className="text-lg font-bold tracking-widest">JL</span>
+            <div className="h-12 w-12 overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-1 shadow-inner shadow-cyan-500/20">
+              <img
+                src={LOGO_ASSET}
+                alt="Job Ledger logo"
+                className="h-full w-full rounded-xl object-contain"
+                width={48}
+                height={48}
+              />
             </div>
             <div>
               <p className="text-xs uppercase tracking-[0.45em] text-slate-400">Job Ledger</p>
