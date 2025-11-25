@@ -103,4 +103,21 @@ This ensures no opportunity slips through the cracks.]
 
 ## Installation Instructions
 
-[instructions go here]
+1. `cd client/job-ledger`
+2. `cp .env.example .env`
+3. Edit `.env` and set `VITE_API_BASE_URL` to your Express server (defaults to `https://jobledger.onrender.com` for production) and adjust `API_PROXY_TARGET` if you run the backend locally.
+4. Install dependencies with `npm install`
+5. Start the Vite dev server with `npm run dev`
+
+## Frontend Deployment (Netlify)
+
+The repo now includes a `netlify.toml` so Netlify automatically uses the frontend located in `client/job-ledger` with `npm run build` and publishes `dist/`. To hook it up to the hosted backend at `https://jobledger.onrender.com`:
+
+1. Sign in to Netlify and select **Add new site → Import from Git**.
+2. Choose this repository; Netlify reads `netlify.toml` and pre-fills `base=client/job-ledger`, `command=npm run build`, and `publish=dist`.
+3. In **Site configuration → Environment variables** confirm or add:
+   - `VITE_API_BASE_URL=https://jobledger.onrender.com`
+   - `VITE_APPLICATIONS_SANDBOX=off` (ensures real API usage)
+4. Trigger **Deploy site**. Every push to `main` will rebuild the Netlify frontend against the Render backend.
+
+If you need to override the backend URL for a preview deploy, update `VITE_API_BASE_URL` on that Netlify context before triggering the build.
