@@ -144,7 +144,7 @@ const HomePage = () => (
           <Sparkles size={14} /> Built by Avid Tech USA
         </div>
         <div className="space-y-4">
-          <h1 className="text-5xl font-black leading-tight sm:text-6xl">
+          <h1 className="text-5xl font-black leading-tight sm:text-5xl">
             Comprehensive application framework for ambitious job hunters.
           </h1>
           <p className="text-lg text-white/80 sm:max-w-3xl">

@@ -10,6 +10,7 @@ import {
   updateApplicationStatus,
   type JobApplication,
 } from '../lib/api'
+import type { ApplicationsResponse } from '../lib/types'
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All statuses' },
@@ -94,7 +95,7 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
   const [page, setPage] = useState(1)
   const [groupByCompany, setGroupByCompany] = useState(false)
   const [applications, setApplications] = useState<JobApplication[]>([])
-  const [meta, setMeta] = useState<{ page: number; limit: number; total: number } | null>(null)
+  const [meta, setMeta] = useState<ApplicationsResponse['meta'] | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
@@ -105,6 +106,8 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
   const [savingEdit, setSavingEdit] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const sandboxMode = isSandboxEnabled()
+  const readOnlyMode = Boolean(meta?.readOnly) && !sandboxMode
+  const canManageApplications = sandboxMode || !readOnlyMode
 
   useEffect(() => {
     const handle = window.setTimeout(() => setDebouncedSearch(searchTerm), 350)
@@ -170,6 +173,12 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
   }, [editingApplication])
 
   useEffect(() => {
+    if (readOnlyMode) {
+      setEditingApplication(null)
+    }
+  }, [readOnlyMode])
+
+  useEffect(() => {
     let cancelled = false
     const fetchData = async () => {
       setLoading(true)
@@ -191,6 +200,7 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
             page,
             limit,
             total: items.length,
+            readOnly: false,
           },
         )
       } catch (err) {
@@ -232,6 +242,10 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
   const handleEditSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!editingApplication) return
+    if (!canManageApplications) {
+      setEditError('Sign in to manage your applications.')
+      return
+    }
     setSavingEdit(true)
     setEditError(null)
     const title = editForm.title.trim()
@@ -272,6 +286,10 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
   }
 
   const handleDeleteApplication = async (application: JobApplication) => {
+    if (!canManageApplications) {
+      setActionError('Sign in to manage your applications.')
+      return
+    }
     const confirmed = window.confirm(
       `Delete your application for ${application.company}? This can't be undone.`,
     )
@@ -296,6 +314,10 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
 
   const handleStatusChange = async (id: string, status: string) => {
     if (!id) return
+    if (!canManageApplications) {
+      setActionError('Sign in to manage your applications.')
+      return
+    }
     setUpdatingId(id)
     setActionError(null)
     try {
@@ -345,6 +367,12 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
           <div className="rounded-2xl border border-cyan-100 bg-cyan-50 px-4 py-3 text-sm text-cyan-900 shadow-sm">
             Demo mode: everything you add or edit here is stored locally in your browser so every visitor
             gets their own sandboxed pipeline. Sign in later to sync with the real API.
+          </div>
+        ) : null}
+        {readOnlyMode ? (
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow-sm">
+            You&apos;re viewing a read-only preview because you aren&apos;t signed in. Sign in to manage your own
+            applications.
           </div>
         ) : null}
 
@@ -525,7 +553,7 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
                             <label className="text-xs font-semibold uppercase tracking-wide text-gray-400">
                               <select
                                 value={application.status}
-                                disabled={updatingId === application.id}
+                                disabled={!canManageApplications || updatingId === application.id}
                                 onChange={(event) =>
                                   handleStatusChange(application.id, event.target.value)
                                 }
@@ -563,29 +591,37 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
                                   <span className="sr-only">No job link available</span>
                                 </span>
                               )}
-                              <button
-                                type="button"
-                                onClick={() => setEditingApplication(application)}
-                                className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
-                                title="Edit application"
-                                aria-label="Edit application"
-                              >
-                                <Pencil size={16} />
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteApplication(application)}
-                                disabled={deletingId === application.id}
-                                className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-rose-200 hover:text-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
-                                title="Delete application"
-                                aria-label="Delete application"
-                              >
-                                {deletingId === application.id ? (
-                                  <Loader2 className="animate-spin" size={16} />
-                                ) : (
-                                  <Trash2 size={16} />
-                                )}
-                              </button>
+                              {canManageApplications ? (
+                                <>
+                                  <button
+                                    type="button"
+                                    onClick={() => setEditingApplication(application)}
+                                    className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
+                                    title="Edit application"
+                                    aria-label="Edit application"
+                                  >
+                                    <Pencil size={16} />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteApplication(application)}
+                                    disabled={deletingId === application.id}
+                                    className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-rose-200 hover:text-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                    title="Delete application"
+                                    aria-label="Delete application"
+                                  >
+                                    {deletingId === application.id ? (
+                                      <Loader2 className="animate-spin" size={16} />
+                                    ) : (
+                                      <Trash2 size={16} />
+                                    )}
+                                  </button>
+                                </>
+                              ) : (
+                                <span className="rounded-full border border-gray-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                  Read only
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -620,7 +656,7 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
                         <td className="px-6 py-4">
                           <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-400"><select
                             value={application.status}
-                            disabled={updatingId === application.id}
+                            disabled={!canManageApplications || updatingId === application.id}
                             onChange={(event) =>
                               handleStatusChange(application.id, event.target.value)
                             }
@@ -671,29 +707,37 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
                                 <span className="sr-only">No job link available</span>
                               </span>
                             )}
-                            <button
-                              type="button"
-                              onClick={() => setEditingApplication(application)}
-                              className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
-                              title="Edit application"
-                              aria-label="Edit application"
-                            >
-                              <Pencil size={16} />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteApplication(application)}
-                              disabled={deletingId === application.id}
-                              className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-rose-200 hover:text-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
-                              title="Delete application"
-                              aria-label="Delete application"
-                            >
-                              {deletingId === application.id ? (
-                                <Loader2 className="animate-spin" size={16} />
-                              ) : (
-                                <Trash2 size={16} />
-                              )}
-                            </button>
+                            {canManageApplications ? (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() => setEditingApplication(application)}
+                                  className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
+                                  title="Edit application"
+                                  aria-label="Edit application"
+                                >
+                                  <Pencil size={16} />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteApplication(application)}
+                                  disabled={deletingId === application.id}
+                                  className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-rose-200 hover:text-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                  title="Delete application"
+                                  aria-label="Delete application"
+                                >
+                                  {deletingId === application.id ? (
+                                    <Loader2 className="animate-spin" size={16} />
+                                  ) : (
+                                    <Trash2 size={16} />
+                                  )}
+                                </button>
+                              </>
+                            ) : (
+                              <span className="rounded-full border border-gray-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                Read only
+                              </span>
+                            )}
                           </div>
                         </td>
                       </tr>
@@ -735,7 +779,7 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
         )}
       </div>
     </section>
-    {editingApplication ? (
+    {canManageApplications && editingApplication ? (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4 py-6"
           onClick={closeEditor}
@@ -880,7 +924,7 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
                 <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-semibold text-amber-800">
                   {editError}
                 </p>
-              ) : null}
+    ) : null}
 
               <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
                 <button

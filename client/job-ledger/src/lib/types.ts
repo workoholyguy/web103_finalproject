@@ -74,6 +74,8 @@ export type ApplicationsResponse = {
     page: number
     limit: number
     total: number
+    source?: string
+    readOnly?: boolean
   }
 }
 

@@ -153,6 +153,27 @@ export async function fetchApplications(
   if (!params.has('page')) params.set('page', String(query.page ?? 1))
   if (!params.has('limit')) params.set('limit', String(query.limit ?? 20))
 
+  const requestedPage = Number(params.get('page')) || 1
+  const requestedLimit = Number(params.get('limit')) || 20
+  const buildFallbackMeta = (total: number) => ({
+    page: requestedPage,
+    limit: requestedLimit,
+    total,
+  })
+
+  const fallbackToDemoApplications = async (): Promise<ApplicationsResponse> => {
+    const demoResponse = await fetchSandboxApplications(query)
+    const meta = demoResponse.meta ?? buildFallbackMeta(demoResponse.items.length)
+    return {
+      items: demoResponse.items ?? [],
+      meta: {
+        ...meta,
+        source: meta.source ?? 'demo',
+        readOnly: true,
+      },
+    }
+  }
+
   const search = params.toString()
   const headers = buildAuthHeaders()
   const response = await fetch(
@@ -163,19 +184,22 @@ export async function fetchApplications(
   )
 
   if (!response.ok) {
+    if (response.status === 401 || response.status === 403) {
+      return fallbackToDemoApplications()
+    }
     throw new Error('Unable to load applications right now.')
   }
 
   const data = (await response.json()) as ApplicationsResponse
-  const fallbackMeta = {
-    page: Number(params.get('page')) || 1,
-    limit: Number(params.get('limit')) || 20,
-    total: data.items?.length ?? 0,
-  }
+  const responseMeta = data.meta ?? buildFallbackMeta(data.items?.length ?? 0)
 
   return {
     items: data.items ?? [],
-    meta: data.meta ?? fallbackMeta,
+    meta: {
+      ...responseMeta,
+      source: responseMeta.source ?? 'api',
+      readOnly: responseMeta.readOnly ?? false,
+    },
   }
 }
 
