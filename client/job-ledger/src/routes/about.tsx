@@ -42,25 +42,25 @@ const timeline = [
     era: 'Winter 2023',
     title: 'Chaos + spreadsheets',
     description:
-      'We bounced between tabs to keep up with recruiters. Important conversations drowned in comments and half-finished Trello cards.',
+      'We pinballed between spreadsheets, DMs, and comments trying to remember who owed a reply, and great conversations cooled off before we could respond.',
   },
   {
     era: 'Spring 2024',
     title: 'Prototype pressure cooker',
     description:
-      'Early prototypes leaned into bold gradients, cinematic copy, and the Name → Same → Fame → Aim → Game storytelling system.',
+      'We pressure-tested cinematic copy, calm OS gradients, and the Name → Same → Fame → Aim → Game story spine until reviews felt linear and grounded.',
   },
   {
     era: 'Summer 2024',
     title: 'Ledger as daily ritual',
     description:
-      'The UI shipped with a job feed, notes, and reminders so we could log gratitude, next steps, and comp data in one place.',
+      'We shipped the ritual-ready UI—job feed, notes, reminders—so gratitude logs, comp data, and next steps finally lived in one ledger.',
   },
   {
     era: 'Fall 2024',
     title: 'Beyond the capstone',
     description:
-      'Auth, analytics, and shareable dashboards are on deck so accountability partners can review pipelines live.',
+      'Auth, analytics, and shareable dashboards stay on deck so accountability partners can audit pipelines in real time.',
   },
 ]
 
@@ -68,19 +68,19 @@ const values = [
   {
     title: 'Cinematic clarity',
     description:
-      'Bold gradients, grids, and typography turn pipeline reviews into rituals you look forward to instead of chores.',
+      'Every surface is framed like a storyboard—bold gradients, precise grids, and patient motion so reviews feel cinematic instead of chaotic.',
     icon: Sparkles,
   },
   {
     title: 'Relationship-first metrics',
     description:
-      'We track the context around recruiters, referrals, and warm intros so every metric ties back to a human story.',
+      'Metrics orbit recruiters, mentors, and referrals so every stat leads back to a relationship and the notes required to keep it warm.',
     icon: HeartHandshake,
   },
   {
     title: 'Systems over luck',
     description:
-      'Structured cadences, notes, and nudges make sure the job hunt feels like a product launch rather than a guessing game.',
+      'Structured cadences, saved notes, and gentle nudges turn outreach into a practiced ritual instead of a guessing game.',
     icon: Target,
   },
 ]
@@ -148,12 +148,14 @@ const AboutPage = () => (
             <Sparkles size={14} /> About Job Ledger
           </p>
           <h1 className="text-4xl font-black lg:text-5xl">
-            We turned the job search into a cinematic operating system.
+            We choreographed the job search into a cinematic calm OS ritual.
           </h1>
           <p className="text-base text-white/80">
-            Job Ledger started when Omar Madjitov needed a calmer system to juggle dozens of applications. It
-            evolved into the weekly ritual that keeps conversations warm, wins documented, and offers judged
-            with signal instead of stress.
+            Job Ledger began when Omar Madjitov was juggling twenty open threads across spreadsheets, pinned
+            emails, and Trello cards. Sunday retros kept slipping, so he drafted a ledger to catalogue outreach,
+            gratitude, and negotiation notes in one calm review. Friends asked for copies, the ritual took on
+            cinematic gradients, and the cadence became the only way we keep conversations warm and offers
+            weighed with intention.
           </p>
           <div className="flex flex-wrap gap-4">
             <Link
@@ -176,11 +178,11 @@ const AboutPage = () => (
             Mission brief
           </p>
           <p className="text-lg font-semibold">
-            Treat every recruiter, hiring manager, and mentor like they are part of the launch team.
+            Run the search like a launch where every collaborator sees the narrative.
           </p>
           <p className="text-sm text-white/70">
-            That means keeping receipts on every outreach, aligning comp data with opportunity size, and
-            automating the follow-up rituals that usually fall through the cracks.
+            We log every outreach with receipts, pair comp ranges with opportunity sizing, and automate the
+            gratitude and follow-up rituals that usually fall through the cracks so the pace stays human.
           </p>
           <div className="flex flex-wrap gap-3">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
@@ -211,9 +213,14 @@ const AboutPage = () => (
         <p className="text-xs uppercase tracking-[0.4em] text-slate-500">Why we exist</p>
         <h2 className="text-3xl font-black text-slate-900">A calm operating system for ambitious job seekers.</h2>
         <p className="text-base text-slate-600">
-          Portfolio updates, recruiter emails, and offer math deserve the same rigor as shipping a product.
-          We pair bold storytelling with pragmatic workflows so you can feel proud of the effort and confident
-          in your data.
+          Portfolio refreshes, recruiter replies, and offer math deserve the same calm cadence as a product
+          release. Job Ledger exists so ambition feels grounded: you open one cinematic workspace, review the
+          facts, name the next ritual, and close the tab feeling in control of the search.
+        </p>
+        <p className="text-base text-slate-600">
+          Our product philosophy is simple—tell the story, surface the data that proves it, then guide the next
+          action. Every surface starts with narrative framing, pairs it with live metrics, and ends with a
+          gentle nudge so the pipeline never drifts.
         </p>
         <div className="space-y-3 rounded-[28px] border border-slate-200 bg-white/70 p-6">
           <p className="text-sm font-semibold text-slate-900">What we&apos;re building next</p>
@@ -300,9 +307,10 @@ const AboutPage = () => (
         <p className="text-xs uppercase tracking-[0.4em] text-slate-500">How we operate</p>
         <h3 className="text-3xl font-black text-slate-900">We promise calm transparency and bold iteration.</h3>
         <p className="text-base text-slate-600">
-          The job hunt is already stressful. Our product decisions prioritize clarity: no dark patterns, no
-          vanity metrics, just signal. Each week we audit commitments, drop blockers in standup, and decide
-          what unlocks the next best story for our users.
+          We run Job Ledger like our standing retros: document the story, show the evidence, and decide the
+          next ritual in plain sight. No dark patterns, no vanity dashboards—just signal. Each week we audit
+          commitments, log blockers in standup, and choose the iteration that unlocks the next meaningful win
+          for job seekers.
         </p>
         <Link
           to="/job-feed"

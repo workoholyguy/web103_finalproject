@@ -352,7 +352,7 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
 
   return (
     <>
-      <section className="bg-white py-16">
+      <section className="bg-white py-10 sm:py-16">
       <div className="mx-auto max-w-6xl px-4 space-y-8">
         <header className="space-y-2">
           <p className="text-sm font-semibold text-cyan-700">Application tracker</p>
@@ -430,10 +430,9 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
           <button
             type="button"
             onClick={resetFilters}
-            className="rounded-2xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-600 hover:border-gray-300"
-            disabled={
-              !searchTerm && statusFilter === 'all' && dateRange === '90'
-            }
+            className="w-full max-w-[220px] rounded-2xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-600 hover:border-gray-300 sm:w-auto"
+            disabled={!searchTerm && statusFilter === 'all' && dateRange === '90'}
+            aria-disabled={!searchTerm && statusFilter === 'all' && dateRange === '90'}
           >
             Reset
           </button>
@@ -490,7 +489,7 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
           </div>
         ) : applications.length ? (
           <div className="space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-gray-500">
+            <div className="flex flex-col gap-4 text-sm text-gray-500 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
               <p>
                 Showing{' '}
                 {applications.length ? (
@@ -631,120 +630,222 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
                 ))}
               </div>
             ) : (
-              <div className="overflow-hidden rounded-3xl border border-gray-100 shadow-sm">
-                <table className="w-full text-sm">
-                  <thead className="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    <tr>
-                      <th className="px-6 py-3">Role</th>
-                      <th className="px-6 py-3">Company</th>
-                      <th className="px-6 py-3">Status</th>
-                      <th className="px-6 py-3">Applied</th>
-                      <th className="px-6 py-3">Source</th>
-                      <th className="px-6 py-3 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100 bg-white">
-                    {applications.map((application) => (
-                      <tr key={application.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4">
-                          <p className="font-semibold text-gray-900">{application.title}</p>
-                          <p className="text-xs text-gray-500">{application.location ?? 'Location TBD'}</p>
-                        </td>
-                        <td className="px-6 py-4">
-                          <p className="font-medium text-gray-900">{application.company}</p>
-                        </td>
-                        <td className="px-6 py-4">
-                          <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-400"><select
+              <>
+                <div className="hidden overflow-x-auto rounded-3xl border border-gray-100 shadow-sm lg:block">
+                  <table className="w-full min-w-[680px] text-sm">
+                    <thead className="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      <tr>
+                        <th className="px-6 py-3">Role</th>
+                        <th className="px-6 py-3">Company</th>
+                        <th className="px-6 py-3">Status</th>
+                        <th className="px-6 py-3">Applied</th>
+                        <th className="px-6 py-3">Source</th>
+                        <th className="px-6 py-3 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 bg-white">
+                      {applications.map((application) => (
+                        <tr key={application.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4">
+                            <p className="font-semibold text-gray-900">{application.title}</p>
+                            <p className="text-xs text-gray-500">{application.location ?? 'Location TBD'}</p>
+                          </td>
+                          <td className="px-6 py-4">
+                            <p className="font-medium text-gray-900">{application.company}</p>
+                          </td>
+                          <td className="px-6 py-4">
+                            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                              <select
+                                value={application.status}
+                                disabled={!canManageApplications || updatingId === application.id}
+                                onChange={(event) =>
+                                  handleStatusChange(application.id, event.target.value)
+                                }
+                                className={`rounded-full border px-3 py-1 text-xs font-semibold ${
+                                  statusColors[application.status] ?? 'bg-gray-100 text-gray-700'
+                                }`}
+                              >
+                                {STATUS_OPTIONS.filter((option) => option.value !== 'all').map(
+                                  (option) => (
+                                    <option key={option.value} value={option.value}>
+                                      {option.label}
+                                    </option>
+                                  ),
+                                )}
+                              </select>
+                            </label>
+                          </td>
+                          <td className="px-6 py-4">
+                            <p className="font-medium text-gray-900">{formatDate(application.appliedAt)}</p>
+                            <p className="text-xs text-gray-500">
+                              {application.responseAt
+                                ? `Response: ${formatDate(application.responseAt)}`
+                                : 'Waiting'}
+                            </p>
+                          </td>
+                          <td className="px-6 py-4">
+                            <p className="font-medium text-gray-900">{application.source ?? 'Manual'}</p>
+                            <p className="text-xs text-gray-500">
+                              {application.remote ? 'Remote' : 'On-site / Hybrid'}
+                            </p>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              {application.jobPostUrl ? (
+                                <a
+                                  href={application.jobPostUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
+                                  aria-label="Open job posting"
+                                  title="Open job posting"
+                                >
+                                  <Eye size={16} />
+                                </a>
+                              ) : (
+                                <span
+                                  className="inline-flex items-center justify-center rounded-full border border-gray-100 bg-gray-50 p-2 text-gray-300"
+                                  title="No job link available"
+                                >
+                                  <Eye size={16} />
+                                  <span className="sr-only">No job link available</span>
+                                </span>
+                              )}
+                              {canManageApplications ? (
+                                <>
+                                  <button
+                                    type="button"
+                                    onClick={() => setEditingApplication(application)}
+                                    className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
+                                    title="Edit application"
+                                    aria-label="Edit application"
+                                  >
+                                    <Pencil size={16} />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteApplication(application)}
+                                    disabled={deletingId === application.id}
+                                    className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-rose-200 hover:text-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                    title="Delete application"
+                                    aria-label="Delete application"
+                                  >
+                                    {deletingId === application.id ? (
+                                      <Loader2 className="animate-spin" size={16} />
+                                    ) : (
+                                      <Trash2 size={16} />
+                                    )}
+                                  </button>
+                                </>
+                              ) : (
+                                <span className="rounded-full border border-gray-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                  Read only
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="space-y-4 lg:hidden">
+                  {applications.map((application) => (
+                    <article
+                      key={application.id}
+                      className="rounded-3xl border border-gray-100 bg-white/90 p-4 shadow-sm"
+                    >
+                      <div className="flex flex-wrap items-start justify-between gap-2">
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">{application.company}</p>
+                          <p className="text-base font-black text-gray-900">{application.title}</p>
+                          <p className="text-xs text-gray-500">
+                            {application.location ?? 'Location TBD'}
+                          </p>
+                        </div>
+                        <label className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                          <select
                             value={application.status}
                             disabled={!canManageApplications || updatingId === application.id}
-                            onChange={(event) =>
-                              handleStatusChange(application.id, event.target.value)
-                            }
-                            className={`rounded-full border px-3 py-1 text-xs font-semibold ${statusColors[application.status] ?? 'bg-gray-100 text-gray-700'
-                              }`}
+                            onChange={(event) => handleStatusChange(application.id, event.target.value)}
+                            className={`mt-1 rounded-full border px-3 py-1 text-xs font-semibold ${
+                              statusColors[application.status] ?? 'bg-gray-100 text-gray-700'
+                            }`}
                           >
-                            {STATUS_OPTIONS.filter((option) => option.value !== 'all').map(
-                              (option) => (
-                                <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>
-                              ),
-                            )}
+                            {STATUS_OPTIONS.filter((option) => option.value !== 'all').map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
                           </select>
-                          </label>
-                        </td>
-                        <td className="px-6 py-4">
-                          <p className="font-medium text-gray-900">{formatDate(application.appliedAt)}</p>
-                          <p className="text-xs text-gray-500">
-                            {application.responseAt ? `Response: ${formatDate(application.responseAt)}` : 'Waiting'}
-                          </p>
-                        </td>
-                        <td className="px-6 py-4">
-                          <p className="font-medium text-gray-900">{application.source ?? 'Manual'}</p>
-                          <p className="text-xs text-gray-500">
-                            {application.remote ? 'Remote' : 'On-site / Hybrid'}
-                          </p>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            {application.jobPostUrl ? (
-                              <a
-                                href={application.jobPostUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
-                                aria-label="Open job posting"
-                                title="Open job posting"
-                              >
-                                <Eye size={16} />
-                              </a>
-                            ) : (
-                              <span
-                                className="inline-flex items-center justify-center rounded-full border border-gray-100 bg-gray-50 p-2 text-gray-300"
-                                title="No job link available"
-                              >
-                                <Eye size={16} />
-                                <span className="sr-only">No job link available</span>
-                              </span>
-                            )}
-                            {canManageApplications ? (
-                              <>
-                                <button
-                                  type="button"
-                                  onClick={() => setEditingApplication(application)}
-                                  className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
-                                  title="Edit application"
-                                  aria-label="Edit application"
-                                >
-                                  <Pencil size={16} />
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => handleDeleteApplication(application)}
-                                  disabled={deletingId === application.id}
-                                  className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-rose-200 hover:text-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
-                                  title="Delete application"
-                                  aria-label="Delete application"
-                                >
-                                  {deletingId === application.id ? (
-                                    <Loader2 className="animate-spin" size={16} />
-                                  ) : (
-                                    <Trash2 size={16} />
-                                  )}
-                                </button>
-                              </>
-                            ) : (
-                              <span className="rounded-full border border-gray-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
-                                Read only
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                        </label>
+                      </div>
+                      <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-gray-500">
+                        <div>
+                          <p className="font-semibold text-gray-900">Applied</p>
+                          <p>{formatDate(application.appliedAt)}</p>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900">Response</p>
+                          <p>{application.responseAt ? formatDate(application.responseAt) : 'Waiting'}</p>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900">Source</p>
+                          <p>{application.source ?? 'Manual'}</p>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900">Mode</p>
+                          <p>{application.remote ? 'Remote' : 'On-site / Hybrid'}</p>
+                        </div>
+                      </div>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {application.jobPostUrl ? (
+                          <a
+                            href={application.jobPostUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex flex-1 items-center justify-center gap-1 rounded-full border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-600 hover:border-cyan-200 hover:text-cyan-700"
+                          >
+                            <Eye size={14} /> View role
+                          </a>
+                        ) : (
+                          <span className="inline-flex flex-1 items-center justify-center rounded-full border border-dashed border-gray-200 px-3 py-2 text-sm text-gray-400">
+                            No posting
+                          </span>
+                        )}
+                        {canManageApplications ? (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => setEditingApplication(application)}
+                              className="inline-flex flex-1 items-center justify-center gap-1 rounded-full border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-600 hover:border-cyan-200 hover:text-cyan-700"
+                            >
+                              <Pencil size={14} /> Edit
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteApplication(application)}
+                              disabled={deletingId === application.id}
+                              className="inline-flex flex-1 items-center justify-center gap-1 rounded-full border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-600 hover:border-rose-200 hover:text-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                              {deletingId === application.id ? (
+                                <Loader2 className="animate-spin" size={14} />
+                              ) : (
+                                <Trash2 size={14} />
+                              )}
+                              Delete
+                            </button>
+                          </>
+                        ) : (
+                          <span className="inline-flex flex-1 items-center justify-center rounded-full border border-gray-200 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                            Read only
+                          </span>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </>
             )}
 
             <div className="flex flex-col gap-3 border-t border-gray-100 pt-4 text-sm text-gray-500 sm:flex-row sm:items-center sm:justify-between">
@@ -773,7 +874,7 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
             </div>
           </div>
         ) : (
-          <div className="rounded-3xl border border-dashed border-gray-200 bg-gray-50 p-12 text-center text-gray-500">
+          <div className="rounded-3xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-gray-500 sm:p-12">
             No applications match those filters. Try widening your search or resetting filters.
           </div>
         )}
