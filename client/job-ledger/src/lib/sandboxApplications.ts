@@ -106,6 +106,12 @@ const writeCache = (apps: JobApplication[]) => {
   persistToStorage(cache)
 }
 
+export const resetSandboxApplications = () => {
+  const seeded = hydrateSeedApplications()
+  writeCache(seeded)
+  return cloneApplications(seeded)
+}
+
 const normalizeStatuses = (status?: string | string[]) => {
   if (!status) return []
   if (Array.isArray(status)) {

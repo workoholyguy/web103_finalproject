@@ -6,11 +6,13 @@ import {
   deleteApplication,
   fetchApplications,
   isSandboxEnabled,
+  resetDemoApplications,
   updateApplication,
   updateApplicationStatus,
   type JobApplication,
 } from '../lib/api'
 import type { ApplicationsResponse } from '../lib/types'
+import { getAccessToken } from '../lib/authClient'
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All statuses' },
@@ -89,8 +91,9 @@ const formatDate = (value?: string | null) => {
 export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
+  const defaultDateRange = getAccessToken() ? '90' : 'any'
   const [statusFilter, setStatusFilter] = useState('all')
-  const [dateRange, setDateRange] = useState('90')
+  const [dateRange, setDateRange] = useState(defaultDateRange)
   const [sortOption, setSortOption] = useState('applied_desc')
   const [page, setPage] = useState(1)
   const [groupByCompany, setGroupByCompany] = useState(false)
@@ -105,9 +108,14 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
   const [editError, setEditError] = useState<string | null>(null)
   const [savingEdit, setSavingEdit] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [resetNonce, setResetNonce] = useState(0)
   const sandboxMode = isSandboxEnabled()
+  const demoDataMode = !sandboxMode && meta?.source === 'demo' && meta?.readOnly !== true
   const readOnlyMode = Boolean(meta?.readOnly) && !sandboxMode
   const canManageApplications = sandboxMode || !readOnlyMode
+  const visitorMode = !getAccessToken()
+  const resetDisabled =
+    visitorMode ? false : !searchTerm && statusFilter === 'all' && dateRange === '90'
 
   useEffect(() => {
     const handle = window.setTimeout(() => setDebouncedSearch(searchTerm), 350)
@@ -154,13 +162,24 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
   const startItem = applications.length ? (currentPage - 1) * pageLimit + 1 : 0
   const endItem = applications.length ? startItem + applications.length - 1 : 0
 
-  const resetFilters = () => {
+  const resetFilters = async () => {
     setSearchTerm('')
     setStatusFilter('all')
-    setDateRange('90')
+    setDateRange(defaultDateRange)
     setSortOption('applied_desc')
     setGroupByCompany(false)
     setPage(1)
+    setEditingApplication(null)
+
+    if (visitorMode) {
+      try {
+        setActionError(null)
+        await resetDemoApplications()
+        setResetNonce((value) => value + 1)
+      } catch (err) {
+        setActionError(err instanceof Error ? err.message : 'Unable to reset demo data right now.')
+      }
+    }
   }
 
   useEffect(() => {
@@ -173,10 +192,10 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
   }, [editingApplication])
 
   useEffect(() => {
-    if (readOnlyMode) {
+    if (!canManageApplications) {
       setEditingApplication(null)
     }
-  }, [readOnlyMode])
+  }, [canManageApplications])
 
   useEffect(() => {
     let cancelled = false
@@ -200,7 +219,6 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
             page,
             limit,
             total: items.length,
-            readOnly: false,
           },
         )
       } catch (err) {
@@ -215,7 +233,7 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
     return () => {
       cancelled = true
     }
-  }, [appliedAfter, debouncedSearch, statusFilter, sortOption, refreshKey, page])
+  }, [appliedAfter, debouncedSearch, statusFilter, sortOption, refreshKey, page, resetNonce])
 
   useEffect(() => {
     const latestTotalPages = Math.max(
@@ -369,10 +387,15 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
               gets their own sandboxed pipeline. Sign in later to sync with the real API.
             </div>
           ) : null}
+          {demoDataMode ? (
+            <div className="rounded-2xl border border-cyan-100 bg-cyan-50 px-4 py-3 text-sm text-cyan-900 shadow-sm">
+              You&apos;re previewing demo data right now. Edits stay on this device until you create an account
+              and sync with the live API.
+            </div>
+          ) : null}
           {readOnlyMode ? (
             <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow-sm">
-              You&apos;re viewing a read-only preview because you aren&apos;t signed in. Sign in to manage your own
-              applications.
+              You&apos;re in a read-only workspace. Sign in with the right access level to manage these applications.
             </div>
           ) : null}
 
@@ -431,8 +454,8 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
               type="button"
               onClick={resetFilters}
               className="w-full max-w-[220px] rounded-2xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-600 hover:border-gray-300 sm:w-auto"
-              disabled={!searchTerm && statusFilter === 'all' && dateRange === '90'}
-              aria-disabled={!searchTerm && statusFilter === 'all' && dateRange === '90'}
+              disabled={resetDisabled}
+              aria-disabled={resetDisabled}
             >
               Reset
             </button>
@@ -461,8 +484,8 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
               onClick={() => setGroupByCompany((value) => !value)}
               aria-pressed={groupByCompany}
               className={`flex items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-sm font-semibold transition ${groupByCompany
-                  ? 'border-cyan-200 bg-cyan-50 text-cyan-800'
-                  : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                ? 'border-cyan-200 bg-cyan-50 text-cyan-800'
+                : 'border-gray-200 text-gray-600 hover:border-gray-300'
                 }`}
             >
               <Layers3 size={16} />

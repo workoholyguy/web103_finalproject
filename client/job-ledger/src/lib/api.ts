@@ -5,6 +5,7 @@ import {
   isSandboxEnabled,
   updateSandboxApplication,
   updateSandboxApplicationStatus,
+  resetSandboxApplications,
 } from './sandboxApplications'
 import { getAccessToken } from './authClient'
 import type {
@@ -131,8 +132,24 @@ export async function refreshJobCache() {
 export async function fetchApplications(
   query: ApplicationsQuery = {}
 ): Promise<ApplicationsResponse> {
-  if (isSandboxEnabled()) {
-    return fetchSandboxApplications(query)
+  const hasToken = Boolean(getAccessToken())
+  const useSandbox = isSandboxEnabled() || !hasToken
+
+  if (useSandbox) {
+    const demoResponse = await fetchSandboxApplications(query)
+    const meta = demoResponse.meta ?? {
+      page: query.page ?? 1,
+      limit: query.limit ?? 20,
+      total: demoResponse.items.length,
+    }
+    return {
+      items: demoResponse.items ?? [],
+      meta: {
+        ...meta,
+        source: isSandboxEnabled() ? meta.source ?? 'sandbox' : 'demo',
+        readOnly: false,
+      },
+    }
   }
 
   const params = new URLSearchParams()
@@ -170,7 +187,7 @@ export async function fetchApplications(
       meta: {
         ...meta,
         source: meta.source ?? 'demo',
-        readOnly: true,
+        readOnly: false,
       },
     }
   }
@@ -207,7 +224,7 @@ export async function fetchApplications(
 export async function createApplication(
   payload: CreateApplicationPayload,
 ): Promise<JobApplication> {
-  if (isSandboxEnabled()) {
+  if (isSandboxEnabled() || !getAccessToken()) {
     return createSandboxApplication(payload)
   }
 
@@ -234,7 +251,7 @@ export async function updateApplicationStatus(
   id: string,
   status: JobApplication['status'],
 ): Promise<JobApplication> {
-  if (isSandboxEnabled()) {
+  if (isSandboxEnabled() || !getAccessToken()) {
     return updateSandboxApplicationStatus(id, status)
   }
 
@@ -261,7 +278,7 @@ export async function updateApplication(
   id: string,
   payload: UpdateApplicationPayload,
 ): Promise<JobApplication> {
-  if (isSandboxEnabled()) {
+  if (isSandboxEnabled() || !getAccessToken()) {
     return updateSandboxApplication(id, payload)
   }
 
@@ -285,7 +302,7 @@ export async function updateApplication(
 }
 
 export async function deleteApplication(id: string): Promise<void> {
-  if (isSandboxEnabled()) {
+  if (isSandboxEnabled() || !getAccessToken()) {
     return deleteSandboxApplication(id)
   }
 
@@ -302,6 +319,13 @@ export async function deleteApplication(id: string): Promise<void> {
       'Unable to delete application right now.'
     throw new Error(message)
   }
+}
+
+export async function resetDemoApplications(): Promise<JobApplication[]> {
+  if (isSandboxEnabled() || !getAccessToken()) {
+    return resetSandboxApplications()
+  }
+  throw new Error('Reset is only available in demo mode.')
 }
 
 export { getSandboxRandomAppliedDate, getSandboxRandomStatus, isSandboxEnabled } from './sandboxApplications'
