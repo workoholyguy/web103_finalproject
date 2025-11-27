@@ -155,7 +155,8 @@ export async function fetchApplications(
 
   const requestedPage = Number(params.get('page')) || 1
   const requestedLimit = Number(params.get('limit')) || 20
-  const buildFallbackMeta = (total: number) => ({
+  type ApplicationsMeta = NonNullable<ApplicationsResponse['meta']>
+  const buildFallbackMeta = (total: number): ApplicationsMeta => ({
     page: requestedPage,
     limit: requestedLimit,
     total,

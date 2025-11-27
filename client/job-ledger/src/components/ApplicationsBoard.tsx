@@ -353,534 +353,530 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
   return (
     <>
       <section className="bg-white py-10 sm:py-16">
-      <div className="mx-auto max-w-6xl px-4 space-y-8">
-        <header className="space-y-2">
-          <p className="text-sm font-semibold text-cyan-700">Application tracker</p>
-          <h2 className="text-3xl font-black text-gray-900">Search & filter your saved roles</h2>
-          <p className="text-gray-500 max-w-3xl">
-            Combine keyword search with status and timeframe filters to focus on the most relevant
-            opportunities in your pipeline.
-          </p>
-        </header>
+        <div className="mx-auto max-w-6xl px-4 space-y-8">
+          <header className="space-y-2">
+            <p className="text-sm font-semibold text-cyan-700">Application tracker</p>
+            <h2 className="text-3xl font-black text-gray-900">Search & filter your saved roles</h2>
+            <p className="text-gray-500 max-w-3xl">
+              Combine keyword search with status and timeframe filters to focus on the most relevant
+              opportunities in your pipeline.
+            </p>
+          </header>
 
-        {sandboxMode ? (
-          <div className="rounded-2xl border border-cyan-100 bg-cyan-50 px-4 py-3 text-sm text-cyan-900 shadow-sm">
-            Demo mode: everything you add or edit here is stored locally in your browser so every visitor
-            gets their own sandboxed pipeline. Sign in later to sync with the real API.
-          </div>
-        ) : null}
-        {readOnlyMode ? (
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow-sm">
-            You&apos;re viewing a read-only preview because you aren&apos;t signed in. Sign in to manage your own
-            applications.
-          </div>
-        ) : null}
-
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-          <label className="flex flex-1 items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 focus-within:border-cyan-500">
-            <Search size={18} className="text-gray-500" />
-            <input
-              type="search"
-              value={searchTerm}
-              onChange={(event) => {
-                setSearchTerm(event.target.value)
-                setPage(1)
-              }}
-              placeholder="Search by company or role title"
-              className="bg-transparent text-sm flex-1 outline-none"
-            />
-          </label>
-
-          <label className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 focus-within:border-cyan-500">
-            <Filter size={18} className="text-gray-500" />
-            <select
-              value={statusFilter}
-              onChange={(event) => {
-                setStatusFilter(event.target.value)
-                setPage(1)
-              }}
-              className="bg-transparent text-sm outline-none"
-            >
-              {STATUS_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 focus-within:border-cyan-500">
-            <span className="text-sm font-medium text-gray-500">Applied</span>
-            <select
-              value={dateRange}
-              onChange={(event) => {
-                setDateRange(event.target.value)
-                setPage(1)
-              }}
-              className="bg-transparent text-sm outline-none"
-            >
-              {DATE_RANGE_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <button
-            type="button"
-            onClick={resetFilters}
-            className="w-full max-w-[220px] rounded-2xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-600 hover:border-gray-300 sm:w-auto"
-            disabled={!searchTerm && statusFilter === 'all' && dateRange === '90'}
-            aria-disabled={!searchTerm && statusFilter === 'all' && dateRange === '90'}
-          >
-            Reset
-          </button>
-        </div>
-
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <label className="flex flex-1 items-center gap-3 rounded-2xl border border-gray-200 bg-white px-4 py-3 focus-within:border-cyan-500">
-            <SortAsc size={18} className="text-gray-500" />
-            <select
-              value={sortOption}
-              onChange={(event) => {
-                setSortOption(event.target.value)
-                setPage(1)
-              }}
-              className="bg-transparent text-sm outline-none"
-            >
-              {SORTING_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button
-            type="button"
-            onClick={() => setGroupByCompany((value) => !value)}
-            aria-pressed={groupByCompany}
-            className={`flex items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-sm font-semibold transition ${
-              groupByCompany
-                ? 'border-cyan-200 bg-cyan-50 text-cyan-800'
-                : 'border-gray-200 text-gray-600 hover:border-gray-300'
-            }`}
-          >
-            <Layers3 size={16} />
-            {groupByCompany ? 'Grouped by company' : 'Group by company'}
-          </button>
-        </div>
-
-        {error ? (
-          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
-          </div>
-        ) : null}
-        {actionError ? (
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            {actionError}
-          </div>
-        ) : null}
-
-        {loading ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-16 text-gray-500">
-            <Loader2 className="animate-spin" size={32} />
-            <p>Loading your applications…</p>
-          </div>
-        ) : applications.length ? (
-          <div className="space-y-4">
-            <div className="flex flex-col gap-4 text-sm text-gray-500 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-              <p>
-                Showing{' '}
-                {applications.length ? (
-                  <>
-                    <span className="font-semibold text-gray-900">{startItem}</span>
-                    {'–'}
-                    <span className="font-semibold text-gray-900">{endItem}</span>
-                  </>
-                ) : (
-                  <span className="font-semibold text-gray-900">0</span>
-                )}{' '}
-                of{' '}
-                <span className="font-semibold text-gray-900">
-                  {totalApplications}
-                </span>{' '}
-                applications
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {STATUS_OPTIONS.filter((option) => option.value !== 'all').map((option) => (
-                  <span key={option.value} className="text-xs uppercase tracking-wide text-gray-400">
-                    {option.label}:{' '}
-                    <span className="text-gray-700 font-semibold">
-                      {summary[option.value] ?? 0}
-                    </span>
-                  </span>
-                ))}
-              </div>
+          {sandboxMode ? (
+            <div className="rounded-2xl border border-cyan-100 bg-cyan-50 px-4 py-3 text-sm text-cyan-900 shadow-sm">
+              Demo mode: everything you add or edit here is stored locally in your browser so every visitor
+              gets their own sandboxed pipeline. Sign in later to sync with the real API.
             </div>
+          ) : null}
+          {readOnlyMode ? (
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow-sm">
+              You&apos;re viewing a read-only preview because you aren&apos;t signed in. Sign in to manage your own
+              applications.
+            </div>
+          ) : null}
 
-            {groupByCompany ? (
-              <div className="space-y-4">
-                {groupedApplications.map((group) => (
-                  <div
-                    key={group.company}
-                    className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <p className="text-lg font-semibold text-gray-900">{group.company}</p>
-                        <p className="text-sm text-gray-500">
-                          {group.applications.length}{' '}
-                          {group.applications.length === 1 ? 'role saved' : 'roles saved'}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="mt-4 space-y-3">
-                      {group.applications.map((application) => (
-                        <div
-                          key={application.id}
-                          className="flex flex-wrap items-center gap-4 rounded-2xl border border-gray-100 bg-gray-50/60 px-4 py-3"
-                        >
-                          <div className="min-w-0 flex-1">
-                            <p className="font-semibold text-gray-900">{application.title}</p>
-                            <p className="text-xs text-gray-500">
-                              {application.location ?? 'Location TBD'} •{' '}
-                              <span className="capitalize">{application.status}</span>
-                            </p>
-                          </div>
-                          <div className="flex flex-col items-end gap-2 text-right">
-                            <label className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                              <select
-                                value={application.status}
-                                disabled={!canManageApplications || updatingId === application.id}
-                                onChange={(event) =>
-                                  handleStatusChange(application.id, event.target.value)
-                                }
-                                className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-                                  statusColors[application.status] ?? 'bg-gray-100 text-gray-700'
-                                }`}
-                              >
-                                {STATUS_OPTIONS.filter((option) => option.value !== 'all').map(
-                                  (option) => (
-                                    <option key={option.value} value={option.value}>
-                                      {option.label}
-                                    </option>
-                                  ),
-                                )}
-                              </select>
-                            </label>
-                            <div className="flex items-center gap-2">
-                              {application.jobPostUrl ? (
-                                <a
-                                  href={application.jobPostUrl}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
-                                  aria-label="Open job posting"
-                                  title="Open job posting"
-                                >
-                                  <Eye size={16} />
-                                </a>
-                              ) : (
-                                <span
-                                  className="inline-flex items-center justify-center rounded-full border border-gray-100 bg-gray-50 p-2 text-gray-300"
-                                  title="No job link available"
-                                >
-                                  <Eye size={16} />
-                                  <span className="sr-only">No job link available</span>
-                                </span>
-                              )}
-                              {canManageApplications ? (
-                                <>
-                                  <button
-                                    type="button"
-                                    onClick={() => setEditingApplication(application)}
-                                    className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
-                                    title="Edit application"
-                                    aria-label="Edit application"
-                                  >
-                                    <Pencil size={16} />
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleDeleteApplication(application)}
-                                    disabled={deletingId === application.id}
-                                    className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-rose-200 hover:text-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
-                                    title="Delete application"
-                                    aria-label="Delete application"
-                                  >
-                                    {deletingId === application.id ? (
-                                      <Loader2 className="animate-spin" size={16} />
-                                    ) : (
-                                      <Trash2 size={16} />
-                                    )}
-                                  </button>
-                                </>
-                              ) : (
-                                <span className="rounded-full border border-gray-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
-                                  Read only
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
+            <label className="flex flex-1 items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 focus-within:border-cyan-500">
+              <Search size={18} className="text-gray-500" />
+              <input
+                type="search"
+                value={searchTerm}
+                onChange={(event) => {
+                  setSearchTerm(event.target.value)
+                  setPage(1)
+                }}
+                placeholder="Search by company or role title"
+                className="bg-transparent text-sm flex-1 outline-none"
+              />
+            </label>
+
+            <label className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 focus-within:border-cyan-500">
+              <Filter size={18} className="text-gray-500" />
+              <select
+                value={statusFilter}
+                onChange={(event) => {
+                  setStatusFilter(event.target.value)
+                  setPage(1)
+                }}
+                className="bg-transparent text-sm outline-none"
+              >
+                {STATUS_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
                 ))}
-              </div>
-            ) : (
-              <>
-                <div className="hidden overflow-x-auto rounded-3xl border border-gray-100 shadow-sm lg:block">
-                  <table className="w-full min-w-[680px] text-sm">
-                    <thead className="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                      <tr>
-                        <th className="px-6 py-3">Role</th>
-                        <th className="px-6 py-3">Company</th>
-                        <th className="px-6 py-3">Status</th>
-                        <th className="px-6 py-3">Applied</th>
-                        <th className="px-6 py-3">Source</th>
-                        <th className="px-6 py-3 text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100 bg-white">
-                      {applications.map((application) => (
-                        <tr key={application.id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4">
-                            <p className="font-semibold text-gray-900">{application.title}</p>
-                            <p className="text-xs text-gray-500">{application.location ?? 'Location TBD'}</p>
-                          </td>
-                          <td className="px-6 py-4">
-                            <p className="font-medium text-gray-900">{application.company}</p>
-                          </td>
-                          <td className="px-6 py-4">
-                            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
-                              <select
-                                value={application.status}
-                                disabled={!canManageApplications || updatingId === application.id}
-                                onChange={(event) =>
-                                  handleStatusChange(application.id, event.target.value)
-                                }
-                                className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-                                  statusColors[application.status] ?? 'bg-gray-100 text-gray-700'
-                                }`}
-                              >
-                                {STATUS_OPTIONS.filter((option) => option.value !== 'all').map(
-                                  (option) => (
-                                    <option key={option.value} value={option.value}>
-                                      {option.label}
-                                    </option>
-                                  ),
-                                )}
-                              </select>
-                            </label>
-                          </td>
-                          <td className="px-6 py-4">
-                            <p className="font-medium text-gray-900">{formatDate(application.appliedAt)}</p>
-                            <p className="text-xs text-gray-500">
-                              {application.responseAt
-                                ? `Response: ${formatDate(application.responseAt)}`
-                                : 'Waiting'}
-                            </p>
-                          </td>
-                          <td className="px-6 py-4">
-                            <p className="font-medium text-gray-900">{application.source ?? 'Manual'}</p>
-                            <p className="text-xs text-gray-500">
-                              {application.remote ? 'Remote' : 'On-site / Hybrid'}
-                            </p>
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                            <div className="flex items-center justify-end gap-2">
-                              {application.jobPostUrl ? (
-                                <a
-                                  href={application.jobPostUrl}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
-                                  aria-label="Open job posting"
-                                  title="Open job posting"
-                                >
-                                  <Eye size={16} />
-                                </a>
-                              ) : (
-                                <span
-                                  className="inline-flex items-center justify-center rounded-full border border-gray-100 bg-gray-50 p-2 text-gray-300"
-                                  title="No job link available"
-                                >
-                                  <Eye size={16} />
-                                  <span className="sr-only">No job link available</span>
-                                </span>
-                              )}
-                              {canManageApplications ? (
-                                <>
-                                  <button
-                                    type="button"
-                                    onClick={() => setEditingApplication(application)}
-                                    className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
-                                    title="Edit application"
-                                    aria-label="Edit application"
-                                  >
-                                    <Pencil size={16} />
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleDeleteApplication(application)}
-                                    disabled={deletingId === application.id}
-                                    className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-rose-200 hover:text-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
-                                    title="Delete application"
-                                    aria-label="Delete application"
-                                  >
-                                    {deletingId === application.id ? (
-                                      <Loader2 className="animate-spin" size={16} />
-                                    ) : (
-                                      <Trash2 size={16} />
-                                    )}
-                                  </button>
-                                </>
-                              ) : (
-                                <span className="rounded-full border border-gray-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
-                                  Read only
-                                </span>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <div className="space-y-4 lg:hidden">
-                  {applications.map((application) => (
-                    <article
-                      key={application.id}
-                      className="rounded-3xl border border-gray-100 bg-white/90 p-4 shadow-sm"
-                    >
-                      <div className="flex flex-wrap items-start justify-between gap-2">
-                        <div>
-                          <p className="text-sm font-semibold text-gray-900">{application.company}</p>
-                          <p className="text-base font-black text-gray-900">{application.title}</p>
-                          <p className="text-xs text-gray-500">
-                            {application.location ?? 'Location TBD'}
-                          </p>
-                        </div>
-                        <label className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                          <select
-                            value={application.status}
-                            disabled={!canManageApplications || updatingId === application.id}
-                            onChange={(event) => handleStatusChange(application.id, event.target.value)}
-                            className={`mt-1 rounded-full border px-3 py-1 text-xs font-semibold ${
-                              statusColors[application.status] ?? 'bg-gray-100 text-gray-700'
-                            }`}
-                          >
-                            {STATUS_OPTIONS.filter((option) => option.value !== 'all').map((option) => (
-                              <option key={option.value} value={option.value}>
-                                {option.label}
-                              </option>
-                            ))}
-                          </select>
-                        </label>
-                      </div>
-                      <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-gray-500">
-                        <div>
-                          <p className="font-semibold text-gray-900">Applied</p>
-                          <p>{formatDate(application.appliedAt)}</p>
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-900">Response</p>
-                          <p>{application.responseAt ? formatDate(application.responseAt) : 'Waiting'}</p>
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-900">Source</p>
-                          <p>{application.source ?? 'Manual'}</p>
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-900">Mode</p>
-                          <p>{application.remote ? 'Remote' : 'On-site / Hybrid'}</p>
-                        </div>
-                      </div>
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {application.jobPostUrl ? (
-                          <a
-                            href={application.jobPostUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex flex-1 items-center justify-center gap-1 rounded-full border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-600 hover:border-cyan-200 hover:text-cyan-700"
-                          >
-                            <Eye size={14} /> View role
-                          </a>
-                        ) : (
-                          <span className="inline-flex flex-1 items-center justify-center rounded-full border border-dashed border-gray-200 px-3 py-2 text-sm text-gray-400">
-                            No posting
-                          </span>
-                        )}
-                        {canManageApplications ? (
-                          <>
-                            <button
-                              type="button"
-                              onClick={() => setEditingApplication(application)}
-                              className="inline-flex flex-1 items-center justify-center gap-1 rounded-full border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-600 hover:border-cyan-200 hover:text-cyan-700"
-                            >
-                              <Pencil size={14} /> Edit
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteApplication(application)}
-                              disabled={deletingId === application.id}
-                              className="inline-flex flex-1 items-center justify-center gap-1 rounded-full border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-600 hover:border-rose-200 hover:text-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
-                            >
-                              {deletingId === application.id ? (
-                                <Loader2 className="animate-spin" size={14} />
-                              ) : (
-                                <Trash2 size={14} />
-                              )}
-                              Delete
-                            </button>
-                          </>
-                        ) : (
-                          <span className="inline-flex flex-1 items-center justify-center rounded-full border border-gray-200 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
-                            Read only
-                          </span>
-                        )}
-                      </div>
-                    </article>
+              </select>
+            </label>
+
+            <label className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 focus-within:border-cyan-500">
+              <span className="text-sm font-medium text-gray-500">Applied</span>
+              <select
+                value={dateRange}
+                onChange={(event) => {
+                  setDateRange(event.target.value)
+                  setPage(1)
+                }}
+                className="bg-transparent text-sm outline-none"
+              >
+                {DATE_RANGE_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="w-full max-w-[220px] rounded-2xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-600 hover:border-gray-300 sm:w-auto"
+              disabled={!searchTerm && statusFilter === 'all' && dateRange === '90'}
+              aria-disabled={!searchTerm && statusFilter === 'all' && dateRange === '90'}
+            >
+              Reset
+            </button>
+          </div>
+
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+            <label className="flex flex-1 items-center gap-3 rounded-2xl border border-gray-200 bg-white px-4 py-3 focus-within:border-cyan-500">
+              <SortAsc size={18} className="text-gray-500" />
+              <select
+                value={sortOption}
+                onChange={(event) => {
+                  setSortOption(event.target.value)
+                  setPage(1)
+                }}
+                className="bg-transparent text-sm outline-none"
+              >
+                {SORTING_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button
+              type="button"
+              onClick={() => setGroupByCompany((value) => !value)}
+              aria-pressed={groupByCompany}
+              className={`flex items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-sm font-semibold transition ${groupByCompany
+                  ? 'border-cyan-200 bg-cyan-50 text-cyan-800'
+                  : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                }`}
+            >
+              <Layers3 size={16} />
+              {groupByCompany ? 'Grouped by company' : 'Group by company'}
+            </button>
+          </div>
+
+          {error ? (
+            <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {error}
+            </div>
+          ) : null}
+          {actionError ? (
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+              {actionError}
+            </div>
+          ) : null}
+
+          {loading ? (
+            <div className="flex flex-col items-center justify-center gap-3 py-16 text-gray-500">
+              <Loader2 className="animate-spin" size={32} />
+              <p>Loading your applications…</p>
+            </div>
+          ) : applications.length ? (
+            <div className="space-y-4">
+              <div className="flex flex-col gap-4 text-sm text-gray-500 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+                <p>
+                  Showing{' '}
+                  {applications.length ? (
+                    <>
+                      <span className="font-semibold text-gray-900">{startItem}</span>
+                      {'–'}
+                      <span className="font-semibold text-gray-900">{endItem}</span>
+                    </>
+                  ) : (
+                    <span className="font-semibold text-gray-900">0</span>
+                  )}{' '}
+                  of{' '}
+                  <span className="font-semibold text-gray-900">
+                    {totalApplications}
+                  </span>{' '}
+                  applications
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  {STATUS_OPTIONS.filter((option) => option.value !== 'all').map((option) => (
+                    <span key={option.value} className="text-xs uppercase tracking-wide text-gray-400">
+                      {option.label}:{' '}
+                      <span className="text-gray-700 font-semibold">
+                        {summary[option.value] ?? 0}
+                      </span>
+                    </span>
                   ))}
                 </div>
-              </>
-            )}
+              </div>
 
-            <div className="flex flex-col gap-3 border-t border-gray-100 pt-4 text-sm text-gray-500 sm:flex-row sm:items-center sm:justify-between">
-              <p>
-                Page <span className="font-semibold text-gray-900">{currentPage}</span> of{' '}
-                <span className="font-semibold text-gray-900">{totalPages}</span>
-              </p>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={goToPreviousPage}
-                  disabled={currentPage <= 1}
-                  className="rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 hover:border-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Previous
-                </button>
-                <button
-                  type="button"
-                  onClick={goToNextPage}
-                  disabled={currentPage >= totalPages}
-                  className="rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 hover:border-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Next
-                </button>
+              {groupByCompany ? (
+                <div className="space-y-4">
+                  {groupedApplications.map((group) => (
+                    <div
+                      key={group.company}
+                      className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <p className="text-lg font-semibold text-gray-900">{group.company}</p>
+                          <p className="text-sm text-gray-500">
+                            {group.applications.length}{' '}
+                            {group.applications.length === 1 ? 'role saved' : 'roles saved'}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-4 space-y-3">
+                        {group.applications.map((application) => (
+                          <div
+                            key={application.id}
+                            className="flex flex-wrap items-center gap-4 rounded-2xl border border-gray-100 bg-gray-50/60 px-4 py-3"
+                          >
+                            <div className="min-w-0 flex-1">
+                              <p className="font-semibold text-gray-900">{application.title}</p>
+                              <p className="text-xs text-gray-500">
+                                {application.location ?? 'Location TBD'} •{' '}
+                                <span className="capitalize">{application.status}</span>
+                              </p>
+                            </div>
+                            <div className="flex flex-col items-end gap-2 text-right">
+                              <label className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                <select
+                                  value={application.status}
+                                  disabled={!canManageApplications || updatingId === application.id}
+                                  onChange={(event) =>
+                                    handleStatusChange(application.id, event.target.value)
+                                  }
+                                  className={`rounded-full border px-3 py-1 text-xs font-semibold ${statusColors[application.status] ?? 'bg-gray-100 text-gray-700'
+                                    }`}
+                                >
+                                  {STATUS_OPTIONS.filter((option) => option.value !== 'all').map(
+                                    (option) => (
+                                      <option key={option.value} value={option.value}>
+                                        {option.label}
+                                      </option>
+                                    ),
+                                  )}
+                                </select>
+                              </label>
+                              <div className="flex items-center gap-2">
+                                {application.jobPostUrl ? (
+                                  <a
+                                    href={application.jobPostUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
+                                    aria-label="Open job posting"
+                                    title="Open job posting"
+                                  >
+                                    <Eye size={16} />
+                                  </a>
+                                ) : (
+                                  <span
+                                    className="inline-flex items-center justify-center rounded-full border border-gray-100 bg-gray-50 p-2 text-gray-300"
+                                    title="No job link available"
+                                  >
+                                    <Eye size={16} />
+                                    <span className="sr-only">No job link available</span>
+                                  </span>
+                                )}
+                                {canManageApplications ? (
+                                  <>
+                                    <button
+                                      type="button"
+                                      onClick={() => setEditingApplication(application)}
+                                      className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
+                                      title="Edit application"
+                                      aria-label="Edit application"
+                                    >
+                                      <Pencil size={16} />
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDeleteApplication(application)}
+                                      disabled={deletingId === application.id}
+                                      className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-rose-200 hover:text-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                      title="Delete application"
+                                      aria-label="Delete application"
+                                    >
+                                      {deletingId === application.id ? (
+                                        <Loader2 className="animate-spin" size={16} />
+                                      ) : (
+                                        <Trash2 size={16} />
+                                      )}
+                                    </button>
+                                  </>
+                                ) : (
+                                  <span className="rounded-full border border-gray-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                    Read only
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <div className="hidden overflow-x-auto rounded-3xl border border-gray-100 shadow-sm lg:block">
+                    <table className="w-full min-w-[680px] text-sm">
+                      <thead className="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        <tr>
+                          <th className="px-6 py-3">Role</th>
+                          <th className="px-6 py-3">Company</th>
+                          <th className="px-6 py-3">Status</th>
+                          <th className="px-6 py-3">Applied</th>
+                          <th className="px-6 py-3">Source</th>
+                          <th className="px-6 py-3 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100 bg-white">
+                        {applications.map((application) => (
+                          <tr key={application.id} className="hover:bg-gray-50">
+                            <td className="px-6 py-4">
+                              <p className="font-semibold text-gray-900">{application.title}</p>
+                              <p className="text-xs text-gray-500">{application.location ?? 'Location TBD'}</p>
+                            </td>
+                            <td className="px-6 py-4">
+                              <p className="font-medium text-gray-900">{application.company}</p>
+                            </td>
+                            <td className="px-6 py-4">
+                              <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                <select
+                                  value={application.status}
+                                  disabled={!canManageApplications || updatingId === application.id}
+                                  onChange={(event) =>
+                                    handleStatusChange(application.id, event.target.value)
+                                  }
+                                  className={`rounded-full border px-3 py-1 text-xs font-semibold ${statusColors[application.status] ?? 'bg-gray-100 text-gray-700'
+                                    }`}
+                                >
+                                  {STATUS_OPTIONS.filter((option) => option.value !== 'all').map(
+                                    (option) => (
+                                      <option key={option.value} value={option.value}>
+                                        {option.label}
+                                      </option>
+                                    ),
+                                  )}
+                                </select>
+                              </label>
+                            </td>
+                            <td className="px-6 py-4">
+                              <p className="font-medium text-gray-900">{formatDate(application.appliedAt)}</p>
+                              <p className="text-xs text-gray-500">
+                                {application.responseAt
+                                  ? `Response: ${formatDate(application.responseAt)}`
+                                  : 'Waiting'}
+                              </p>
+                            </td>
+                            <td className="px-6 py-4">
+                              <p className="font-medium text-gray-900">{application.source ?? 'Manual'}</p>
+                              <p className="text-xs text-gray-500">
+                                {application.remote ? 'Remote' : 'On-site / Hybrid'}
+                              </p>
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                              <div className="flex items-center justify-end gap-2">
+                                {application.jobPostUrl ? (
+                                  <a
+                                    href={application.jobPostUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
+                                    aria-label="Open job posting"
+                                    title="Open job posting"
+                                  >
+                                    <Eye size={16} />
+                                  </a>
+                                ) : (
+                                  <span
+                                    className="inline-flex items-center justify-center rounded-full border border-gray-100 bg-gray-50 p-2 text-gray-300"
+                                    title="No job link available"
+                                  >
+                                    <Eye size={16} />
+                                    <span className="sr-only">No job link available</span>
+                                  </span>
+                                )}
+                                {canManageApplications ? (
+                                  <>
+                                    <button
+                                      type="button"
+                                      onClick={() => setEditingApplication(application)}
+                                      className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-cyan-200 hover:text-cyan-700"
+                                      title="Edit application"
+                                      aria-label="Edit application"
+                                    >
+                                      <Pencil size={16} />
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDeleteApplication(application)}
+                                      disabled={deletingId === application.id}
+                                      className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 transition hover:border-rose-200 hover:text-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                      title="Delete application"
+                                      aria-label="Delete application"
+                                    >
+                                      {deletingId === application.id ? (
+                                        <Loader2 className="animate-spin" size={16} />
+                                      ) : (
+                                        <Trash2 size={16} />
+                                      )}
+                                    </button>
+                                  </>
+                                ) : (
+                                  <span className="rounded-full border border-gray-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                    Read only
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="space-y-4 lg:hidden">
+                    {applications.map((application) => (
+                      <article
+                        key={application.id}
+                        className="rounded-3xl border border-gray-100 bg-white/90 p-4 shadow-sm"
+                      >
+                        <div className="flex flex-wrap items-start justify-between gap-2">
+                          <div>
+                            <p className="text-sm font-semibold text-gray-900">{application.company}</p>
+                            <p className="text-base font-black text-gray-900">{application.title}</p>
+                            <p className="text-xs text-gray-500">
+                              {application.location ?? 'Location TBD'}
+                            </p>
+                          </div>
+                          <label className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                            <select
+                              value={application.status}
+                              disabled={!canManageApplications || updatingId === application.id}
+                              onChange={(event) => handleStatusChange(application.id, event.target.value)}
+                              className={`mt-1 rounded-full border px-3 py-1 text-xs font-semibold ${statusColors[application.status] ?? 'bg-gray-100 text-gray-700'
+                                }`}
+                            >
+                              {STATUS_OPTIONS.filter((option) => option.value !== 'all').map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
+                        </div>
+                        <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-gray-500">
+                          <div>
+                            <p className="font-semibold text-gray-900">Applied</p>
+                            <p>{formatDate(application.appliedAt)}</p>
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-900">Response</p>
+                            <p>{application.responseAt ? formatDate(application.responseAt) : 'Waiting'}</p>
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-900">Source</p>
+                            <p>{application.source ?? 'Manual'}</p>
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-900">Mode</p>
+                            <p>{application.remote ? 'Remote' : 'On-site / Hybrid'}</p>
+                          </div>
+                        </div>
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {application.jobPostUrl ? (
+                            <a
+                              href={application.jobPostUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex flex-1 items-center justify-center gap-1 rounded-full border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-600 hover:border-cyan-200 hover:text-cyan-700"
+                            >
+                              <Eye size={14} /> View role
+                            </a>
+                          ) : (
+                            <span className="inline-flex flex-1 items-center justify-center rounded-full border border-dashed border-gray-200 px-3 py-2 text-sm text-gray-400">
+                              No posting
+                            </span>
+                          )}
+                          {canManageApplications ? (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => setEditingApplication(application)}
+                                className="inline-flex flex-1 items-center justify-center gap-1 rounded-full border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-600 hover:border-cyan-200 hover:text-cyan-700"
+                              >
+                                <Pencil size={14} /> Edit
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteApplication(application)}
+                                disabled={deletingId === application.id}
+                                className="inline-flex flex-1 items-center justify-center gap-1 rounded-full border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-600 hover:border-rose-200 hover:text-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
+                              >
+                                {deletingId === application.id ? (
+                                  <Loader2 className="animate-spin" size={14} />
+                                ) : (
+                                  <Trash2 size={14} />
+                                )}
+                                Delete
+                              </button>
+                            </>
+                          ) : (
+                            <span className="inline-flex flex-1 items-center justify-center rounded-full border border-gray-200 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                              Read only
+                            </span>
+                          )}
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              <div className="flex flex-col gap-3 border-t border-gray-100 pt-4 text-sm text-gray-500 sm:flex-row sm:items-center sm:justify-between">
+                <p>
+                  Page <span className="font-semibold text-gray-900">{currentPage}</span> of{' '}
+                  <span className="font-semibold text-gray-900">{totalPages}</span>
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={goToPreviousPage}
+                    disabled={currentPage <= 1}
+                    className="rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 hover:border-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    type="button"
+                    onClick={goToNextPage}
+                    disabled={currentPage >= totalPages}
+                    className="rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 hover:border-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ) : (
-          <div className="rounded-3xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-gray-500 sm:p-12">
-            No applications match those filters. Try widening your search or resetting filters.
-          </div>
-        )}
-      </div>
-    </section>
-    {canManageApplications && editingApplication ? (
+          ) : (
+            <div className="rounded-3xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-gray-500 sm:p-12">
+              No applications match those filters. Try widening your search or resetting filters.
+            </div>
+          )}
+        </div>
+      </section>
+      {canManageApplications && editingApplication ? (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4 py-6"
           onClick={closeEditor}
@@ -1025,7 +1021,7 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
                 <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-semibold text-amber-800">
                   {editError}
                 </p>
-    ) : null}
+              ) : null}
 
               <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
                 <button
