@@ -94,7 +94,7 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
   const defaultDateRange = getAccessToken() ? '90' : 'any'
   const [statusFilter, setStatusFilter] = useState('all')
   const [dateRange, setDateRange] = useState(defaultDateRange)
-  const [sortOption, setSortOption] = useState('applied_desc')
+  const [sortOption, setSortOption] = useState('created_desc')
   const [page, setPage] = useState(1)
   const [groupByCompany, setGroupByCompany] = useState(false)
   const [applications, setApplications] = useState<JobApplication[]>([])
@@ -166,7 +166,7 @@ export function ApplicationsBoard({ refreshKey = 0 }: { refreshKey?: number }) {
     setSearchTerm('')
     setStatusFilter('all')
     setDateRange(defaultDateRange)
-    setSortOption('applied_desc')
+    setSortOption('created_desc')
     setGroupByCompany(false)
     setPage(1)
     setEditingApplication(null)

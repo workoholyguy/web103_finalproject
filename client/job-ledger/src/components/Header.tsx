@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
 
-const LOGO_ASSET = '/logo5121.png'
+const LOGO_ASSET = '/Zoom_brilliant_logo.png'
 
 const NAV_LINKS = [
   { label: 'Home', to: '/' },
@@ -85,13 +85,13 @@ export default function Header() {
       <header className="fixed inset-x-0 top-0 z-30 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <Link to="/" className="flex items-center gap-3 text-white">
-            <div className="h-12 w-12 overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-1 shadow-inner shadow-cyan-500/20">
+            <div className="h-14 w-14 overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-1 shadow-inner shadow-cyan-500/20">
               <img
                 src={LOGO_ASSET}
                 alt="Job Ledger logo"
                 className="h-full w-full rounded-xl object-contain"
-                width={48}
-                height={48}
+                width={84}
+                height={84}
               />
             </div>
             <div>

@@ -9,7 +9,7 @@ const footerLinks = [
   { label: 'About', to: '/about' },
 ]
 
-const LOGO_ASSET = '/logo5121.png'
+const LOGO_ASSET = '/Zoom_brilliant_logo.png'
 
 export default function Footer() {
   const year = new Date().getFullYear()
